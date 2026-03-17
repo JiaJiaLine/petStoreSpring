@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div id="Footer" th:fragment="Footer">
+        <div id="PoweredBy">&nbsp<a href="https://user.qzone.qq.com/1771171610/infocenter">cjz</a>
+        </div>
+
+        <div id="Banner">
+            <th:block th:if="${session.loginAccount != null}"}>
+                <th:block th:if="${session.loginAccount.bannerOption}">
+                    ${session.loginAccount.bannerName}
+                </th:block>
+            </th:block>
+        </div>
+    </div>
+</body>
+</html>

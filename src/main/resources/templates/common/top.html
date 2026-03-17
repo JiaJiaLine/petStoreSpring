@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>MyPetStoreSpring</title>
+    <link rel="stylesheet" th:href="@{/css/mypetstore.css}" type="text/css" media="screen">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+<div id="Header" th:fragment="header">
+    <div id="Logo">
+        <div id="LogoContent">
+            <a th:href="@{/mainForm}">
+                <img style="vertical-align: middle;" th:src="@{/images/logo-topbar.gif}" alt="logo图片">
+            </a>
+        </div>
+    </div>
+
+    <div id="Menu">
+        <div id="MenuContent">
+            <a th:href="@{/cartForm}">
+                <img style="vertical-align: middle;" th:src="@{/images/cart.gif}" alt="cart图片">
+            </a>
+
+            <img style="vertical-align: middle;" th:src="@{/images/separator.gif}">
+
+            <th:block th:if="${session.loginAccount == null}">
+                <a th:href="@{/signonForm}">Sign in</a>
+                <img style="vertical-align: middle;" th:src="@{/images/separator.gif}">
+            </th:block>
+
+            <th:block th:if="${session.loginAccount != null}">
+                <a href="#">Sign out</a> <img style="vertical-align: middle;" th:src="@{/images/separator.gif}" />
+                <a href="#">My account</a> <img style="vertical-align: middle;" th:src="@{/images/separator.gif}" />
+            </th:block>
+
+            <a th:href="@{/help.html}">?</a>
+        </div>
+    </div>
+
+
+    <div id="Search">
+        <div id="SearchContent">
+            <form th:action="@{/search}" method="post">
+                <input type="text" name="keyword" size="14" id="keyword"/>
+                <input type="submit" value="Search"/>
+            </form>
+            <div id="productSearchComplete">
+                <ul id="productSearchUl">
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="QuickLinks">
+        <a th:href="@{/fish}"><img th:src="@{/images/sm_fish.gif}" /></a>
+        <img th:src="@{/images/separator.gif}" />
+
+        <a th:href="@{/dogs}"><img th:src="@{/images/sm_dogs.gif}" /></a>
+        <img th:src="@{/images/separator.gif}" />
+
+        <a th:href="@{/reptiles}"><img th:src="@{/images/sm_reptiles.gif}" /></a>
+        <img th:src="@{/images/separator.gif}" />
+
+        <a th:href="@{/cats}"><img th:src="@{/images/sm_cats.gif}" /></a>
+        <img th:src="@{/images/separator.gif}" />
+
+        <a th:href="@{/birds}"><img th:src="@{/images/sm_birds.gif}" /></a>
+    </div>
+
+</div> <div id="Content">
+    <div th:if="${message != null}" th:text="${message}" style="color: red;">
+        这里会显示后端的提示信息（比如“登录失败”、“加入购物车成功”）
+    </div>
+</div>
+
+</body>
+</html>
