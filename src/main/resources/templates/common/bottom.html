@@ -10,10 +10,8 @@
         </div>
 
         <div id="Banner">
-            <th:block th:if="${session.loginAccount != null}"}>
-                <th:block th:if="${session.loginAccount.bannerOption}">
-                    ${session.loginAccount.bannerName}
-                </th:block>
+            <th:block th:if="${session.loginAccount != null and session.loginAccount.bannerOption}">
+                    <span th:text="${session.loginAccount.bannerName}"></span>
             </th:block>
         </div>
     </div>

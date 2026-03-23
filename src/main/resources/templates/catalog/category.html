@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/mypetstore.css}" type="text/css" media="screen">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <title>Category</title>
+</head>
+<body>
+    <header th:replace="~{common/top::Header}"></header>
+
+
+    <div id="Content">
+
+        <div th:if="${msg != null}" th:text="${msg}"></div>
+
+
+        <div id="BackLink">
+            <a th:href="@{/catalog/main}">Return to Main Menu</a>
+        </div>
+
+        <div id="Catalog">
+
+            <h2><span th:text="${category.categoryName}"></span></h2>
+
+            <table>
+                <tr>
+                    <th>Product ID</th>
+                    <th>Name</th>
+                </tr>
+                <tr th:each="product:${category.productList}">
+                    <td>
+                        <a th:href="@{/catalog/viewProduct(productId=${product.productId})}">
+                        <span th:text="${product.productId}"></span>
+                        </a>
+                    </td>
+                    <td>
+                        <span th:text="${product.name}"></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <footer th:replace="~{common/bottom::Footer}"></footer>
+</body>
+</html>

@@ -15,7 +15,8 @@ class PetStoreSpringApplicationTests {
 	@Test
 	void contextLoads() {
 		Category category = categoryMapper.selectById("CATS");
-		System.out.println(category);
+		String test = category.getName();
+		System.out.println(test);
 	}
 
 }

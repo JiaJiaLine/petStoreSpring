@@ -7,10 +7,10 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 <body>
-<div id="Header" th:fragment="header">
+<div id="Header" th:fragment="Header">
     <div id="Logo">
         <div id="LogoContent">
-            <a th:href="@{/mainForm}">
+            <a th:href="@{/catalog//main}">
                 <img style="vertical-align: middle;" th:src="@{/images/logo-topbar.gif}" alt="logo图片">
             </a>
         </div>
@@ -18,14 +18,14 @@
 
     <div id="Menu">
         <div id="MenuContent">
-            <a th:href="@{/cartForm}">
+            <a th:href="@{/catalog//viewCart}">
                 <img style="vertical-align: middle;" th:src="@{/images/cart.gif}" alt="cart图片">
             </a>
 
             <img style="vertical-align: middle;" th:src="@{/images/separator.gif}">
 
             <th:block th:if="${session.loginAccount == null}">
-                <a th:href="@{/signonForm}">Sign in</a>
+                <a th:href="@{/catalog//viewSignon}">Sign in</a>
                 <img style="vertical-align: middle;" th:src="@{/images/separator.gif}">
             </th:block>
 

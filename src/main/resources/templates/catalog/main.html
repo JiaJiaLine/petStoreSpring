@@ -7,8 +7,60 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 <body>
-    <header th:replace="common/top.html"></header>
-    Main
-    <footer th:replace="common/bottom.html"></footer>
+    <header th:replace="~{common/top :: Header}"></header>
+
+    <div id="Content">
+
+        <div th:if="${msg != null}" th:text="${msg}"></div>
+
+    <div id="WelcomeContent">
+        <th:block th:if="${session.loginAccount != null}">
+                <span th:text="${session.loginAccount.firstname}"></span>
+        </th:block>
+    </div>
+
+    <div id="Main">
+        <div id="Sidebar">
+            <div id="SidebarContent">
+                <a th:href="@{/catalog/viewCategory(categoryId='FISH')}"><img th:src="@{/images/fish_icon.gif}"></a><br />
+                Saltwater, Freshwater <br />
+                <a th:href="@{/catalog/viewCategory(categoryId='DOGS')}"><img th:src="@{/images/dogs_icon.gif}"></a><br />
+                Various Breeds <br />
+                <a th:href="@{/catalog/viewCategory(categoryId='CATS')}"><img th:src="@{/images/cats_icon.gif}"></a><br />
+                Various Breeds, Exotic Varieties <br />
+                <a th:href="@{/catalog/categoryForm(categoryId='REPTILES')}"><img th:src="@{/images/reptiles_icon.gif}"></a><br />
+                Lizards, Turtles, Snakes <br />
+                <a th:href="@{/catalog/categoryForm(categoryId='BIRDS')}"><img th:src="@{/images/birds_icon.gif}"></a><br />
+                Exotic Varieties <br />
+            </div>
+        </div>
+
+
+    <div id="MainImage">
+        <div id="MainImageContent">
+            <map name="estoremap">
+                <area alt="Birds" coords="72,2,280,250"
+                      th:href="@{/catalog/viewCategory(categoryId='BIRDS')}" shape="RECT" />
+                <area alt="Fish" coords="2,180,72,250"
+                      th:href="@{/catalog/viewCategory(categoryId='FISH')}" shape="RECT" />
+                <area alt="Dogs" coords="60,250,130,320"
+                      th:href="@{/catalog/viewCategory(categoryId='DOGS')}" shape="RECT" />
+                <area alt="Reptiles" coords="140,270,210,340"
+                      th:href="@{/catalog/viewCategory(categoryId='REPTILES')}" shape="RECT" />
+                <area alt="Cats" coords="225,240,295,310"
+                      th:href="@{/catalog/viewCategory(categoryId='CATS')}" shape="RECT" />
+                <area alt="Birds" coords="280,180,350,250"
+                      th:href="@{/catalog/viewCategory(categoryId='BIRDS')}" shape="RECT" />
+            </map>
+            <img style="vertical-align: middle;" height="355" th:src="@{/images/splash.gif}" usemap="#estoremap" width="350"/>
+        </div>
+    </div>
+
+    <div id="Separator">&nbsp;</div>
+    </div>
+
+    </div>
+
+    <footer th:replace="~{common/bottom::Footer}"></footer>
 </body>
 </html>
