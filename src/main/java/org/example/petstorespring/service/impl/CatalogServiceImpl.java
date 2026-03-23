@@ -1,7 +1,6 @@
 package org.example.petstorespring.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.example.petstorespring.entity.Category;
 import org.example.petstorespring.entity.Item;
 import org.example.petstorespring.entity.Product;
