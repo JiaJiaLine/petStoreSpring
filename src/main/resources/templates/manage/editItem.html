@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>修改商品项</title>
+  <link rel="stylesheet" th:href="@{/css/mypetstore.css}" type="text/css" media="screen">
+</head>
+<body>
+<header th:replace="~{common/top::Header}"></header>
+<div id="Content">
+  <h2>修改商品项</h2>
+
+  <div th:if="${error != null}" th:text="${error}" style="color:red; padding:10px;"></div>
+
+  <form th:action="@{/manage/updateItem}" method="post">
+    <table>
+      <tr><td>Item ID</td><td><input type="text" name="itemId" th:value="${item.itemId}" readonly/></td></tr>
+      <tr><td>商品ID</td><td><input type="text" name="productId" th:value="${item.productId}" readonly/></td></tr>
+      <tr><td>售价</td><td><input type="text" name="listPrice" th:value="${item.listPrice}"/></td></tr>
+      <tr><td>成本</td><td><input type="text" name="unitCost" th:value="${item.unitCost}"/></td></tr>
+      <tr><td>状态</td>
+        <td>
+          <select name="status">
+            <option value="P" th:selected="${item.status == 'P'}">P - 上架</option>
+            <option value="N" th:selected="${item.status == 'N'}">N - 下架</option>
+          </select>
+        </td>
+      </tr>
+      <tr><td colspan="2">
+        <input type="submit" value="保存"/>
+        <a th:href="@{/manage/index}">取消</a>
+      </td></tr>
+    </table>
+  </form>
+</div>
+<footer th:replace="~{common/bottom::Footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>修改商品</title>
+  <link rel="stylesheet" th:href="@{/css/mypetstore.css}" type="text/css" media="screen">
+</head>
+<body>
+<header th:replace="~{common/top::Header}"></header>
+<div id="Content">
+  <h2>修改商品</h2>
+
+  <div th:if="${error != null}" th:text="${error}" style="color:red; padding:10px;"></div>
+
+  <form th:action="@{/manage/updateProduct}" method="post">
+    <table>
+      <tr><td>商品ID</td><td><input type="text" name="productId" th:value="${product.productId}" readonly/></td></tr>
+      <tr><td>分类ID</td><td><input type="text" name="categoryId" th:value="${product.categoryId}"/></td></tr>
+      <tr><td>名称</td><td><input type="text" name="name" th:value="${product.productName}"/></td></tr>
+      <tr><td colspan="2">
+        <input type="submit" value="保存"/>
+        <a th:href="@{/manage/index}">取消</a>
+      </td></tr>
+    </table>
+  </form>
+</div>
+<footer th:replace="~{common/bottom::Footer}"></footer>
+</body>
+</html>

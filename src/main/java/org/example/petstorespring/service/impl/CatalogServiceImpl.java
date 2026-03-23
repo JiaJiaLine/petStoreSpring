@@ -31,6 +31,7 @@ public class CatalogServiceImpl implements CatalogService {
     public CategoryVO getCategory(String categoryId) {
         CategoryVO categoryVO = new CategoryVO();
         Category category = categoryMapper.selectById(categoryId);
+        if (category == null) return null;
 
         QueryWrapper<Product> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("category",categoryId);
@@ -44,9 +45,25 @@ public class CatalogServiceImpl implements CatalogService {
     }
 
     @Override
+    public void addCategory(Category category) {
+        categoryMapper.insert(category);
+    }
+
+    @Override
+    public void updateCategory(Category category) {
+        categoryMapper.updateById(category);
+    }
+
+    @Override
+    public void deleteCategory(String categoryId) {
+        categoryMapper.deleteById(categoryId);
+    }
+
+    @Override
     public ProductVO getProduct(String productId) {
         ProductVO productVO = new ProductVO();
         Product product = productMapper.selectById(productId);
+        if (product == null) return null;
 
         QueryWrapper<Item> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("productid", productId);
@@ -58,6 +75,21 @@ public class CatalogServiceImpl implements CatalogService {
         productVO.setItemList(itemList);
 
         return productVO;
+    }
+
+    @Override
+    public void addProduct(Product product) {
+        productMapper.insert(product);
+    }
+
+    @Override
+    public void updateProduct(Product product) {
+        productMapper.updateById(product);
+    }
+
+    @Override
+    public void deleteProduct(String productId) {
+        productMapper.deleteById(productId);
     }
 
     @Override
@@ -80,5 +112,42 @@ public class CatalogServiceImpl implements CatalogService {
         itemVO.setAttribution5(item.getAttribution5());
 
         return itemVO;
+    }
+
+    @Override
+    public void addItem(Item item) {
+        itemMapper.insert(item);
+    }
+
+    @Override
+    public void updateItem(Item item) {
+        itemMapper.updateById(item);
+    }
+
+    @Override
+    public void deleteItem(String itemId) {
+        itemMapper.deleteById(itemId);
+    }
+
+    @Override
+    public void putItemOnSale(String itemId) {
+        Item item = itemMapper.selectById(itemId);
+        item.setStatus("P");
+        itemMapper.updateById(item);
+    }
+
+    @Override
+    public List<Category> getAllCategories() {
+        return categoryMapper.selectList(null);
+    }
+
+    @Override
+    public List<Product> getAllProducts() {
+        return productMapper.selectList(null);
+    }
+
+    @Override
+    public List<Item> getAllItems() {
+        return itemMapper.selectList(null);
     }
 }

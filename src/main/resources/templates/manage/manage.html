@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>商品管理</title>
+    <link rel="stylesheet" th:href="@{/css/mypetstore.css}" type="text/css" media="screen">
+</head>
+<body>
+<header th:replace="~{common/top::Header}"></header>
+
+<div id="Content">
+    <h2>商品管理</h2>
+
+    <div th:if="${error != null}" th:text="${error}" style="color:red; padding:10px;"></div>
+
+    <!-- Category管理 -->
+    <h3>分类管理</h3>
+    <form th:action="@{/manage/addCategory}" method="post">
+        <table>
+            <tr><td>分类ID</td><td><input type="text" name="categoryId"/></td></tr>
+            <tr><td>名称</td><td><input type="text" name="name"/></td></tr>
+            <tr><td>描述</td><td><input type="text" name="description"/></td></tr>
+            <tr><td colspan="2"><input type="submit" value="新增分类"/></td></tr>
+        </table>
+    </form>
+    <table>
+        <tr><th>分类ID</th><th>名称</th><th>操作</th></tr>
+        <tr th:each="category : ${categoryList}">
+            <td th:text="${category.categoryId}"></td>
+            <td th:text="${category.name}"></td>
+            <td>
+                <a th:href="@{/manage/deleteCategory(categoryId=${category.categoryId})}">删除</a>
+                <a th:href="@{/manage/editCategory(categoryId=${category.categoryId})}">修改</a>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Product管理 -->
+    <h3>商品管理</h3>
+    <form th:action="@{/manage/addProduct}" method="post">
+        <table>
+            <tr><td>商品ID</td><td><input type="text" name="productId"/></td></tr>
+            <tr><td>分类ID</td><td><input type="text" name="categoryId"/></td></tr>
+            <tr><td>名称</td><td><input type="text" name="name"/></td></tr>
+            <tr><td>描述</td><td><input type="text" name="description"/></td></tr>
+            <tr><td colspan="2"><input type="submit" value="新增商品"/></td></tr>
+        </table>
+    </form>
+    <table>
+        <tr><th>商品ID</th><th>分类ID</th><th>名称</th><th>操作</th></tr>
+        <tr th:each="product : ${productList}">
+            <td th:text="${product.productId}"></td>
+            <td th:text="${product.categoryId}"></td>
+            <td th:text="${product.name}"></td>
+            <td>
+                <a th:href="@{/manage/deleteProduct(productId=${product.productId})}">删除</a>
+                <a th:href="@{/manage/editProduct(productId=${product.productId})}">修改</a>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Item管理 -->
+    <h3>商品项管理</h3>
+    <form th:action="@{/manage/addItem}" method="post">
+        <table>
+            <tr><td>Item ID</td><td><input type="text" name="itemId"/></td></tr>
+            <tr><td>商品ID</td><td><input type="text" name="productId"/></td></tr>
+            <tr><td>售价</td><td><input type="text" name="listPrice"/></td></tr>
+            <tr><td>成本</td><td><input type="text" name="unitCost"/></td></tr>
+            <tr>
+                <td>状态</td>
+                <td>
+                    <select name="status">
+                        <option value="P">P - 上架</option>
+                        <option value="N">N - 下架</option>
+                    </select>
+                </td>
+            </tr>
+            <tr><td colspan="2"><input type="submit" value="新增商品项"/></td></tr>
+        </table>
+    </form>
+    <table>
+        <tr><th>Item ID</th><th>商品ID</th><th>售价</th><th>状态</th><th>操作</th></tr>
+        <tr th:each="item : ${itemList}">
+            <td th:text="${item.itemId}"></td>
+            <td th:text="${item.productId}"></td>
+            <td th:text="${item.listPrice}"></td>
+            <td th:text="${item.status}"></td>
+            <td>
+                <a th:href="@{/manage/deleteItem(itemId=${item.itemId})}">删除</a>
+                <a th:href="@{/manage/editItem(itemId=${item.itemId})}">修改</a>
+                <a th:href="@{/manage/putItemOnSale(itemId=${item.itemId})}">上架</a>
+            </td>
+        </tr>
+    </table>
+
+</div>
+
+<footer th:replace="~{common/bottom::Footer}"></footer>
+</body>
+</html>
