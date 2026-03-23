@@ -2,6 +2,7 @@ package org.example.petstorespring.controller;
 
 import org.example.petstorespring.service.CatalogService;
 import org.example.petstorespring.vo.CategoryVO;
+import org.example.petstorespring.vo.ProductVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,7 +30,9 @@ public class CatalogController {
     }
 
     @GetMapping("/viewProduct")
-    public String ProductController(){
+    public String ProductController(@RequestParam String productId,Model model){
+        ProductVO productVO = catalogService.getProduct(productId);
+        model.addAttribute("product",productVO);
         return "catalog/product";
     }
 }
