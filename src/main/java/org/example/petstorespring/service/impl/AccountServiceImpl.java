@@ -31,12 +31,11 @@ public class AccountServiceImpl implements AccountService {
 
 
     private Account account;
-    private SignOn signOn;
+    //private SignOn signOn;
 
     @Override
     public SignOnVO getSignOn(String username, String password) {
 
-        //Account account=accountMapper.selectById(username);
         SignOn signOn=signOnMapper.selectById(username);
         SignOnVO signOnVO=new SignOnVO();
         if(username==null||password==null){
@@ -52,7 +51,6 @@ return signOnVO;
             return signOnVO;
         }
         signOnVO.setSignOnMsg(null);
-         //BeanUtils.copyProperties(signOnVO,signOn);
         signOn.setUsername(username);
         signOn.setPassword(password);
         return signOnVO;
@@ -69,7 +67,10 @@ return signOnVO;
 
         return account;
     }
-
+    @Override
+public void setAccount(Account newaccount){
+        account=newaccount;
+}
     @Override
     public LoginAccountVO getLoginAccount() {
         LoginAccountVO loginAccountVO = new LoginAccountVO();
@@ -146,9 +147,11 @@ return signOnVO;
             username = loginAccountVO.getUsername();
             if (username == null || username.isEmpty()) {
                 loginAccountVO.setMsg("用户名不能为空");
+                return;
             }
             if (accountMapper.selectById(username) != null) {
                 loginAccountVO.setMsg("用户名已存在，无法注册");
+                return;
             }
         }
 

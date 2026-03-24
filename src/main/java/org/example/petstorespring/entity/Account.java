@@ -24,6 +24,7 @@ public class Account {
     private String zip;
     private String country;
     private String phone;
-
+    @TableField("isManager")
+    private Boolean isManager;
 
 }
