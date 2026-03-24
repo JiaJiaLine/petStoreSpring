@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 @TableName("product")
 public class Product {
-    @TableId("productId")
+    @TableId("productid")
     private String productId;
     @TableField("category")
     private String categoryId;

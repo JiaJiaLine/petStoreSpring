@@ -19,13 +19,13 @@ public class Item {
     private String supplier;
     private String status;
     @TableField("attr1")
-    private String attribution1;
+    private String attribute1;
     @TableField("attr2")
-    private String attribution2;
+    private String attribute2;
     @TableField("attr3")
-    private String attribution3;
+    private String attribute3;
     @TableField("attr4")
-    private String attribution4;
+    private String attribute4;
     @TableField("attr5")
-    private String attribution5;
+    private String attribute5;
 }

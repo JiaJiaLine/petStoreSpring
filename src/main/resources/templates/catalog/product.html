@@ -10,11 +10,12 @@
 <header th:replace="~{common/top::Header}"></header>
     <div id="Content">
       <div id="BackLink">
-        <a th:href="@{/catalog/viewCategory(categoryId=${category.categoryId})}">
-          Return to <span th:text="${prodcut.categoryName}"></span>
+        <a th:href="@{/catalog/viewCategory(categoryId=${product.categoryId})}">
+          Return to <span th:text="${product.categoryName}"></span>
         </a>
+      </div>
         <div id="Catalog">
-          <h2><span th:text="${product.name}"></span></h2>
+          <h2><span th:text="${product.productName}"></span></h2>
           <table>
             <tr>
               <th>Item ID</th>
@@ -33,7 +34,7 @@
                 <span th:text="${product.productId}"></span>
               </td>
               <td>
-                <span th:text="|${item.attribute1 != null ? item.attribute1 : ''} ${item.attribute2 != null ? item.attribute2 : ''} ${item.attribute3 != null ? item.attribute3 : ''} ${item.attribute4 != null ? item.attribute4 : ''} ${item.attribute5 != null ? item.attribute5 : ''} ${product.name}|"></span>
+                <span th:text="|${item.attribute1 != null ? item.attribute1 : ''} ${item.attribute2 != null ? item.attribute2 : ''} ${item.attribute3 != null ? item.attribute3 : ''} ${item.attribute4 != null ? item.attribute4 : ''} ${item.attribute5 != null ? item.attribute5 : ''} ${product.productName}|"></span>
               </td>
               <td>
                 <span th:text="'$' + ${#numbers.formatDecimal(item.listPrice, 1, 'COMMA', 2, 'POINT')}"></span>
@@ -44,8 +45,8 @@
             </tr>
           </table>
         </div>
-      </div>
     </div>
 <footer th:replace="~{common/bottom::Footer}"></footer>
+
 </body>
 </html>
