@@ -10,9 +10,13 @@
         </div>
 
         <div id="Banner">
-            <th:block th:if="${session.loginAccount != null and session.loginAccount.bannerOption}">
-                    <span th:text="${session.loginAccount.bannerName}"></span>
-            </th:block>
+
+            <label th:if="(${session.loginAccount} != null) and (${session.authenticated})and(${session.loginAccount.bannerName}!=null)">
+                <img th:if="${session.loginAccount.bannerOption}"
+                     th:src="${'/'+#strings.arraySplit(session.loginAccount.bannerName,'&quot;')[1]}">
+
+            </label>
+
         </div>
     </div>
 </body>

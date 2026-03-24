@@ -24,14 +24,14 @@
 
             <img style="vertical-align: middle;" th:src="@{/images/separator.gif}">
 
-            <th:block th:if="${session.loginAccount == null}">
-                <a th:href="@{/catalog//viewSignon}">Sign in</a>
+            <th:block th:if="${session.account == null}">
+                <a th:href="@{/account/viewSignon}">Sign in</a>
                 <img style="vertical-align: middle;" th:src="@{/images/separator.gif}">
             </th:block>
 
-            <th:block th:if="${session.loginAccount != null}">
-                <a href="#">Sign out</a> <img style="vertical-align: middle;" th:src="@{/images/separator.gif}" />
-                <a href="#">My account</a> <img style="vertical-align: middle;" th:src="@{/images/separator.gif}" />
+            <th:block th:if="${session.account != null}">
+                <a href="/account/signoff">Sign out</a> <img style="vertical-align: middle;" th:src="@{/images/separator.gif}" />
+                <a href="/account/editAccountForm">My account</a> <img style="vertical-align: middle;" th:src="@{/images/separator.gif}" />
             </th:block>
 
             <a th:href="@{/help.html}">?</a>

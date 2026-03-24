@@ -1,0 +1,107 @@
+<h3>Account Information</h3>
+
+<table>
+    <tr>
+        <td>First name:</td>
+        <td>
+            <input type="text" name="firstName" th:value="${session.loginAccount.firstName}">
+        </td>
+    </tr>
+    <tr>
+        <td>Last name:</td>
+        <td>
+            <input type="text" name="lastName" th:value="${session.loginAccount.lastName}">
+        </td>
+    </tr>
+    <tr>
+        <td>Email:</td>
+        <td>
+            <input type="text" name="email" th:value="${session.loginAccount.email}">
+        </td>
+    </tr>
+    <tr>
+        <td>Phone:</td>
+        <td>
+            <input type="text" name="phone" th:value="${session.loginAccount.phone}">
+        </td>
+    </tr>
+    <tr>
+        <td>Address 1:</td>
+        <td>
+            <input type="text" name="address1" th:value="${session.loginAccount.address1}">
+        </td>
+    </tr>
+    <tr>
+        <td>Address 2:</td>
+        <td>
+            <input type="text" name="address2" th:value="${session.loginAccount.address2}">
+        </td>
+    </tr>
+    <tr>
+        <td>City:</td>
+        <td>
+            <input type="text" name="city" th:value="${session.loginAccount.city}">
+        </td>
+    </tr>
+    <tr>
+        <td>State:</td>
+        <td>
+            <input type="text" name="state" th:value="${session.loginAccount.state}">
+        </td>
+    </tr>
+    <tr>
+        <td>Zip:</td>
+        <td>
+            <input type="text" name="zip" th:value="${session.loginAccount.zip}">
+        </td>
+    </tr>
+    <tr>
+        <td>Country:</td>
+        <td>
+            <input type="text" name="country" th:value="${session.loginAccount.country}">
+        </td>
+    </tr>
+</table>
+
+<h3>Profile Information</h3>
+
+<table>
+    <tr>
+        <td>Language Preference:</td>
+        <td>
+            <select name="languagePreference">
+                <option th:each="lang : ${languagePreference}"
+                        th:value="${lang}"
+                        th:text="${lang}"
+                        th:selected="${session.loginAccount.languagePreference == lang}">
+                </option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>Favourite Category:</td>
+        <td>
+            <select name="favouriteCategoryId">
+                <option th:each="favourite : ${favouriteCategoryId}"
+                        th:value="${favourite}"
+                        th:text="${favourite}"
+                        th:selected="${session.loginAccount.favouriteCategoryId == favourite}">
+                </option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>Enable MyList</td>
+        <td>
+            <input type="checkbox" name="listOption" value="true"
+                   th:checked="${session.loginAccount.listOption}">
+        </td>
+    </tr>
+    <tr>
+        <td>Enable MyBanner</td>
+        <td>
+            <input type="checkbox" name="bannerOption" value="true"
+                   th:checked="${session.loginAccount.bannerOption}">
+        </td>
+    </tr>
+</table>
