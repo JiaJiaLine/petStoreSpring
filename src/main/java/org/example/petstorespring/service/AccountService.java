@@ -12,5 +12,5 @@ public interface AccountService {
     Account getAccount();
     LoginAccountVO getLoginAccount();
     void updateAccount(LoginAccountVO loginAccountVO, HttpSession session);
-
+    void setAccount(Account newaccount);
 }

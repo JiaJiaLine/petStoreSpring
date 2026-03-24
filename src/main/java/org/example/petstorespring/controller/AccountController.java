@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -19,11 +20,11 @@ import java.util.List;
 
 @Slf4j
 @Controller
-@RequestMapping("/account")
+//@RequestMapping("/account")
 public class AccountController {
 @Autowired
     private AccountService accountService;
-   @GetMapping("viewSignon")
+   @GetMapping("/account/viewSignon")
     public String signOn(Model model){
        // SignOnVO signOnVO=accountService.getSignOn(username,password);
        SignOnVO emptySignOnVO = new SignOnVO();
@@ -32,7 +33,7 @@ public class AccountController {
 
         return "account/signon";
     }
-    @PostMapping("signOn")
+    @PostMapping("/account/signOn")
     public String handleSignOnSubmit(
             String username,  // 接收表单 username 参数
             String password,  // 接收表单 password 参数
@@ -55,17 +56,18 @@ public class AccountController {
 
     }
 
-    @GetMapping("signoff")
+    @GetMapping("/signoff")
     public String signOff(HttpSession session){
        session.removeAttribute("account");
        session.removeAttribute("loginAccount");
        session.removeAttribute("authenticated");
-       return"catalog/main";
+       accountService.setAccount(null);
+       return"../static/index";
     }
 
-    @GetMapping("editAccountForm")
+    @GetMapping("/account/editAccountForm")
     public String getEdit(HttpSession session,Model model){
-        LoginAccountVO loginAccountVO=accountService.getLoginAccount();
+
         List<String> languageList = Arrays.asList("zh-CN", "en-US", "ja-JP");
         List<String> favList = Arrays.asList("BIRDS",
                 "CATS",
@@ -74,13 +76,14 @@ public class AccountController {
                 "REPTILES"
         );
         model.addAttribute("favouriteCategoryId",favList);
-        model.addAttribute("loginAccount",loginAccountVO);
         model.addAttribute("languagePreference",languageList);
+        LoginAccountVO loginAccountVO=accountService.getLoginAccount();
+        model.addAttribute("loginAccount",loginAccountVO);
         session.setAttribute("loginAccount",loginAccountVO);
         return "account/editAccount";
    }
 
-    @PostMapping("editAccount")
+    @PostMapping("/account/editAccount")
     public String postEdit(  LoginAccountVO loginAccountVO,HttpSession session){
       accountService.updateAccount(loginAccountVO,session);
 if(loginAccountVO.getMsg()!=null)

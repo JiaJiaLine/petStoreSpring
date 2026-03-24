@@ -30,7 +30,7 @@
             </th:block>
 
             <th:block th:if="${session.account != null}">
-                <a href="/account/signoff">Sign out</a> <img style="vertical-align: middle;" th:src="@{/images/separator.gif}" />
+                <a href="/signoff">Sign out</a> <img style="vertical-align: middle;" th:src="@{/images/separator.gif}" />
                 <a href="/account/editAccountForm">My account</a> <img style="vertical-align: middle;" th:src="@{/images/separator.gif}" />
             </th:block>
 
@@ -53,19 +53,15 @@
     </div>
 
     <div id="QuickLinks">
-        <a th:href="@{/fish}"><img th:src="@{/images/sm_fish.gif}" /></a>
-        <img th:src="@{/images/separator.gif}" />
-
-        <a th:href="@{/dogs}"><img th:src="@{/images/sm_dogs.gif}" /></a>
-        <img th:src="@{/images/separator.gif}" />
-
-        <a th:href="@{/reptiles}"><img th:src="@{/images/sm_reptiles.gif}" /></a>
-        <img th:src="@{/images/separator.gif}" />
-
-        <a th:href="@{/cats}"><img th:src="@{/images/sm_cats.gif}" /></a>
-        <img th:src="@{/images/separator.gif}" />
-
-        <a th:href="@{/birds}"><img th:src="@{/images/sm_birds.gif}" /></a>
+        <a href="/catalog/viewCategory?categoryId=FISH"><img src="../images/sm_fish.gif" /></a>
+        <img src="../images/separator.gif" />
+        <a href="/catalog/viewCategory?categoryId=DOGS"><img src="../images/sm_dogs.gif" /></a>
+        <img src="../images/separator.gif" />
+        <a href="/catalog/viewCategory?categoryId=REPTILES"><img src="../images/sm_reptiles.gif" /></a>
+        <img src="../images/separator.gif" />
+        <a href="/catalog/viewCategory?categoryId=CATS"><img src="../images/sm_cats.gif" /></a>
+        <img src="../images/separator.gif" />
+        <a href="/catalog/viewCategory?categoryId=BIRDS"><img src="../images/sm_birds.gif" /></a>
     </div>
 
 </div> <div id="Content">
