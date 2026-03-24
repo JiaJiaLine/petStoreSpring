@@ -2,6 +2,7 @@ package org.example.petstorespring.controller;
 
 import org.example.petstorespring.service.CatalogService;
 import org.example.petstorespring.vo.CategoryVO;
+import org.example.petstorespring.vo.ItemVO;
 import org.example.petstorespring.vo.ProductVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,5 +35,12 @@ public class CatalogController {
         ProductVO productVO = catalogService.getProduct(productId);
         model.addAttribute("product",productVO);
         return "catalog/product";
+    }
+
+    @GetMapping("/viewItem")
+    public String ItemController(@RequestParam String itemId,Model model){
+        ItemVO itemVO = catalogService.getItem(itemId);
+        model.addAttribute("item",itemVO);
+        return "catalog/item";
     }
 }

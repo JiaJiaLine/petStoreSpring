@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 @TableName("item")
 public class Item {
@@ -13,10 +15,10 @@ public class Item {
     @TableField("productid")
     private String productId;
     @TableField("listprice")
-    private String listPrice;
+    private BigDecimal listPrice;
     @TableField("unitcost")
-    private String unitCost;
-    private String supplier;
+    private BigDecimal unitCost;
+    private int supplier;
     private String status;
     @TableField("attr1")
     private String attribute1;
