@@ -349,3 +349,8 @@ body>#Banner {
     color: #54c07a;
     font-size:13px;
 }
+
+.item-attribute {
+    font-size: 18px; /* 对应原来的 size="4" 大约是 18px-20px */
+    font-weight: bold;
+}
