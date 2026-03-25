@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Account - MyPetStore</title>
+    <link rel="StyleSheet" href="css/mypetstore.css" type="text/css" media="screen"/>
+</head>
+<body>
+
+<header th:replace="common/top"></header>
+
+<div id="Content">
+    <div id="Catalog">
+        <form action="/account/editAccount" th:action="@{/account/editAccount}" method="post">
+            <h3>User Information</h3>
+            <p th:if="${session.loginAccount != null and session.loginAccount.msg != null}">
+                <font color="red" th:text="${session.loginAccount.msg}">Error Message</font>
+            </p>
+            <table>
+                <tr>
+                    <td>User ID:</td>
+                    <td>
+                        <input type="text" name="username"
+                               th:value="${session.loginAccount.username}" id="username">
+                        <div id="feedback"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>New password:</td>
+                    <td>
+                        <input type="text" name="password"
+                               th:value="${session.loginAccount.password}">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Repeat password:</td>
+                    <td>
+                        <input type="text" name="repeatedPassword">
+                    </td>
+                </tr>
+            </table>
+
+            <div th:replace="account/includeAccountFields "></div>
+
+
+            <input type="submit" name="editAccount" value="Save Account Information">
+        </form>
+
+
+
+        <a th:if="${session.account}"  th:href="@{/order/listOrders}">My Orders |</a>
+        <a th:if="${session.account}"  th:href="@{/account/viewUserLog}"> View Operation Log</a>
+    </div>
+</div>
+
+
+
+<footer th:replace="common/bottom "></footer>
+
+</body>
+</html>
