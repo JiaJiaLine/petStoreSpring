@@ -24,7 +24,7 @@
             </p>
 
             <p>
-                请输入验证码：<input type="text" id="inputCode">
+                请输入验证码：<input type="text" id="inputCode" name="inputCode" required>
                 <span id="codeDisplay" style="font-weight:bold; letter-spacing:3px; background:#eee; padding:2px 5px;"></span>
                 <button type="button" onclick="createCode()">Refresh</button>
             </p>
@@ -33,6 +33,14 @@
                 function createCode() {
                     let code = Math.floor(1000 + Math.random() * 9000); // 生成4位随机数
                     document.getElementById("codeDisplay").innerText = code;
+                    // 将验证码存储到session中
+                    fetch('/account/generateCaptcha', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({captcha: code})
+                    })
                 }
                 createCode();
             </script>

@@ -40,7 +40,7 @@ public class AccountServiceImpl implements AccountService {
         SignOnVO signOnVO=new SignOnVO();
         if(username==null||password==null){
             signOnVO.setSignOnMsg("请输入账号密码");
-return signOnVO;
+            return signOnVO;
         }
         if(signOn==null){
             signOnVO.setSignOnMsg("用户不存在");
@@ -67,10 +67,17 @@ return signOnVO;
 
         return account;
     }
+
     @Override
-public void setAccount(Account newaccount){
+    public void setAccount(Account newaccount){
         account=newaccount;
 }
+
+    @Override
+    public void generateCaptcha(String captcha, HttpSession session) {
+        session.setAttribute("captchaCode", captcha);
+    }
+
     @Override
     public LoginAccountVO getLoginAccount() {
         LoginAccountVO loginAccountVO = new LoginAccountVO();

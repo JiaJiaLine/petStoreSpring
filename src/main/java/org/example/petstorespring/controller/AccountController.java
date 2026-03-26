@@ -10,20 +10,20 @@ import org.example.petstorespring.vo.SignOnVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
 //@RequestMapping("/account")
 public class AccountController {
-@Autowired
+
+    @Autowired
     private AccountService accountService;
+
    @GetMapping("/account/viewSignon")
     public String signOn(Model model){
        // SignOnVO signOnVO=accountService.getSignOn(username,password);
@@ -33,15 +33,26 @@ public class AccountController {
 
         return "account/signon";
     }
+
     @PostMapping("/account/signOn")
     public String handleSignOnSubmit(
             String username,  // 接收表单 username 参数
             String password,  // 接收表单 password 参数
-            String captcha,   // 可选：接收验证码参数（如果表单有）
+            String inputCode,   // 接受用户输入的验证码
             Model model,
             HttpSession session) {
 
         SignOnVO signOnVO = accountService.getSignOn(username, password);
+
+        // 验证码
+        String generatedCode = (String) session.getAttribute("captchaCode");
+        if (generatedCode == null || !generatedCode.equals(inputCode)) {
+            signOnVO.setSignOnMsg("验证码错误");
+            model.addAttribute("signOn", signOnVO);
+            System.out.println("错了吗");
+            return "account/signon";
+        }
+
         model.addAttribute("signOn", signOnVO);
        session.setAttribute("account",accountService.getAccount(username));
        session.setAttribute("authenticated",true);
@@ -84,18 +95,37 @@ public class AccountController {
    }
 
     @PostMapping("/account/editAccount")
-    public String postEdit(  LoginAccountVO loginAccountVO,HttpSession session){
-      accountService.updateAccount(loginAccountVO,session);
-if(loginAccountVO.getMsg()!=null)
-{
+    public String postEdit(  LoginAccountVO loginAccountVO,String repeatPassword,HttpSession session)
+    {
+        // 验证重复密码
+        if (loginAccountVO.getPassword() != null && !loginAccountVO.getPassword().isEmpty()) {
+            if (repeatPassword == null || !loginAccountVO.getPassword().equals(repeatPassword)) {
+                loginAccountVO.setMsg("两次输入的密码不一致");
+                session.setAttribute("loginAccount", loginAccountVO);
+                return "account/editAccount";
+            }
+        }
 
-    session.setAttribute("loginAccount",loginAccountVO);
-    return"account/editAccount";
-}
-    else{    Account updatedAccount = accountService.getAccount(loginAccountVO.getUsername());
-        session.setAttribute("account", updatedAccount); // 更新用户信息
-        session.setAttribute("authenticated",true);
-        session.setAttribute("loginAccount",loginAccountVO);
-        return "catalog/main";}
+        accountService.updateAccount(loginAccountVO,session);
+        if(loginAccountVO.getMsg()!=null)
+        {
+            session.setAttribute("loginAccount",loginAccountVO);
+            return"account/editAccount";
+        }
+        else{
+            Account updatedAccount = accountService.getAccount(loginAccountVO.getUsername());
+            session.setAttribute("account", updatedAccount); // 更新用户信息
+            session.setAttribute("authenticated",true);
+            session.setAttribute("loginAccount",loginAccountVO);
+            return "catalog/main";
+        }
+    }
+
+    @PostMapping("/account/generateCaptcha")
+    public void generateCaptcha(@RequestBody Map<String, String> request, HttpSession session) {
+        String captcha = request.get("captcha");
+        if (captcha != null) {
+            accountService.generateCaptcha(captcha, session);
+        }
     }
 }

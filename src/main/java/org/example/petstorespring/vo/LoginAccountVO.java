@@ -24,4 +24,5 @@ public class LoginAccountVO {
     private boolean bannerOption;
     private String bannerName;
     private String Msg;
+    private String repeatPassword;
 }
