@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Add New SKU</title>
+  <link rel="stylesheet" th:href="@{/css/mypetstore.css}" type="text/css" media="screen">
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script th:src="@{/js/itemSearch.js}"></script>
+</head>
+<body>
+<header th:replace="~{common/top::Header}"></header>
+
+<div id="Content">
+  <div id="BackLink">
+    <a th:href="@{/manage/manageItem}">Return to Item Management</a>
+  </div>
+
+  <div id="Catalog">
+    <h2>Add New Item (SKU)</h2>
+    <form th:action="@{/manage/addItem}" method="post">
+      <table class="manage-table" style="margin: 0 auto;">
+        <tr>
+          <td>Item ID:</td>
+          <td><input type="text" name="itemId" required placeholder="e.g. EST-99"/></td>
+        </tr>
+
+        <tr>
+          <td>Category:</td>
+          <td>
+            <select id="categorySelect" required>
+              <option value="">-- Select Category --</option>
+              <option th:each="cat : ${categoryList}"
+                      th:value="${cat.categoryId}"
+                      th:text="${cat.name}">
+              </option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>Product:</td>
+          <td>
+            <select name="productId" id="productSelect" required>
+              <option value="">-- Select Product --</option>
+            </select>
+          </td>
+        </tr>
+
+        <tr>
+          <td>Supplier:</td>
+          <td>
+            <select name="supplier" required>
+              <option value="1">XYZ Pets (ID: 1)</option>
+              <option value="2">ABC Pets (ID: 2)</option>
+            </select>
+          </td>
+        </tr>
+
+        <tr>
+          <td>List Price ($):</td>
+          <td><input type="number" step="0.01" name="listPrice" required placeholder="0.00"/></td>
+        </tr>
+        <tr>
+          <td>Initial Stock (Quantity):</td>
+          <td><input type="number" name="quantity" required min="0" value="10"/></td>
+        </tr>
+
+        <tr>
+          <td>Attribute 1 (e.g. Adult Male):</td>
+          <td><input type="text" name="attribute1"/></td>
+        </tr>
+
+        <tr>
+          <td colspan="2" style="text-align: center;">
+            <input type="submit" value="Save New SKU" class="Button" />
+          </td>
+        </tr>
+      </table>
+    </form>
+  </div>
+</div>
+
+<footer th:replace="~{common/bottom::Footer}"></footer>
+</body>
+</html>

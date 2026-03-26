@@ -62,6 +62,7 @@ public class CatalogServiceImpl implements CatalogService {
 
         LambdaQueryWrapper<Item> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(Item::getProductId,productId);
+        lambdaQueryWrapper.eq(Item::getStatus,"P");
         List<Item> itemList = itemMapper.selectList(lambdaQueryWrapper);
 
         productVO.setProductId(productId);

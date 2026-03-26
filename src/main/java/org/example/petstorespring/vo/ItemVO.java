@@ -26,4 +26,7 @@ public class ItemVO {
 
     // 4. 库存信息 (来自 inventory 表)
     private Integer quantity;
+
+    private String status;
+    private int supplier;
 }

@@ -1,15 +1,14 @@
 package org.example.petstorespring.controller;
 
 import org.example.petstorespring.entity.Category;
+import org.example.petstorespring.entity.Item;
 import org.example.petstorespring.entity.Product;
 import org.example.petstorespring.service.ManageService;
+import org.example.petstorespring.vo.ItemVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -161,5 +160,108 @@ public class ManageController {
         manageService.updateProduct(product);
         redirectAttributes.addFlashAttribute("msg", "Successfully updated product!");
         return "redirect:/manage/manageProduct";
+    }
+
+    // ================== Item 模块：级联 AJAX 接口 ==================
+
+    @GetMapping("/getProductsByCategory")
+    @ResponseBody // 🌟 极其重要！它告诉 Spring：不要去找 HTML，直接把查到的 List 变成 JSON 数据扔给前端！
+    public List<Product> getProductsByCategory(@RequestParam("categoryId") String categoryId) {
+    return manageService.searchProducts("",categoryId);
+    }
+
+    // ================== Item 模块：查询页面 ==================
+
+    @GetMapping("/manageItem")
+    public String manageItem(Model model) {
+        model.addAttribute("categoryList", manageService.getAllCategories());
+        // 初始页面：什么条件都不传，查出所有的 ItemVO 兜底展示
+        model.addAttribute("itemList", manageService.searchItems(null, null, null));
+        return "manage/itemSearch";
+    }
+
+    @PostMapping("/searchItem")
+    public String searchItem(@RequestParam(value = "categoryId", required = false) String categoryId,
+                             @RequestParam(value = "productId", required = false) String productId,
+                             @RequestParam(value = "keyword", required = false) String keyword,
+                             Model model) {
+
+        // 调用我们刚刚写好的超级组装方法
+        List<ItemVO> itemVOList = manageService.searchItems(categoryId, productId, keyword);
+
+        // 渲染页面需要的核心数据
+        model.addAttribute("categoryList", manageService.getAllCategories());
+        model.addAttribute("itemList", itemVOList);
+
+        // 回显用户的搜索条件（为了让页面刷新后，下拉框依然保持选中的状态）
+        model.addAttribute("currentCategoryId", categoryId);
+        model.addAttribute("currentProductId", productId);
+        model.addAttribute("currentKeyword", keyword);
+
+        return "manage/itemSearch";
+    }
+
+    @GetMapping("/toggleItemStatus")
+    public String toggleItemStatus(@RequestParam("itemId") String itemId,
+                                   @RequestParam("currentStatus") String currentStatus,
+                                   RedirectAttributes redirectAttributes) {
+        manageService.toggleItemStatus(itemId, currentStatus);
+
+        // 动态提示信息
+        String action = "P".equals(currentStatus) ? "Delisted" : "Listed";
+        redirectAttributes.addFlashAttribute("msg", "Item " + itemId + " has been " + action + " successfully!");
+
+        return "redirect:/manage/manageItem"; // 完事跳回列表页，你会发现状态变色了
+    }
+
+    // ================== 修改库存 (Stock) 模块 ==================
+
+    // 1. 跳转到修改库存页面
+    @GetMapping("/editStockPage")
+    public String editStockPage(@RequestParam("itemId") String itemId, Model model) {
+        // 查出这个商品的当前库存，传给页面回显
+        ItemVO itemVO = manageService.getItemVOById(itemId);
+        model.addAttribute("item", itemVO);
+        return "manage/editStock";
+    }
+
+    // 2. 接收表单，保存库存
+    @PostMapping("/updateStock")
+    public String updateStock(@RequestParam("itemId") String itemId,
+                              @RequestParam("quantity") Integer quantity,
+                              RedirectAttributes redirectAttributes) {
+        // 调用 Service 更新 Inventory 表
+        manageService.updateStock(itemId, quantity);
+
+        redirectAttributes.addFlashAttribute("msg", "Successfully updated stock for Item: " + itemId);
+        return "redirect:/manage/manageItem";
+    }
+
+    // ================== Add Item & Delete Item ==================
+
+    // 1. 跳转到新增 SKU 页面
+    @GetMapping("/addItemPage")
+    public String addItemPage(Model model) {
+        // 🌟 只需要查出 Category，Product 下拉框交给咱们写好的 AJAX 去动态加载！
+        model.addAttribute("categoryList", manageService.getAllCategories());
+        return "manage/addItem";
+    }
+
+    // 2. 接收表单，保存新 SKU
+    @PostMapping("/addItem")
+    public String addItem(Item item,
+                          @RequestParam("quantity") Integer quantity,
+                          RedirectAttributes redirectAttributes,int supplier) {
+        manageService.addItem(item, quantity,supplier);
+        redirectAttributes.addFlashAttribute("msg", "Successfully added new SKU: " + item.getItemId());
+        return "redirect:/manage/manageItem";
+    }
+
+    // 3. 彻底删除 SKU
+    @GetMapping("/deleteItem")
+    public String deleteItem(@RequestParam("itemId") String itemId, RedirectAttributes redirectAttributes) {
+        manageService.deleteItem(itemId);
+        redirectAttributes.addFlashAttribute("msg", "Successfully deleted SKU: " + itemId);
+        return "redirect:/manage/manageItem";
     }
 }

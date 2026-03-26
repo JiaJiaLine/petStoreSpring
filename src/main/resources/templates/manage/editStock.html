@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Stock</title>
+  <link rel="stylesheet" th:href="@{/css/mypetstore.css}" type="text/css" media="screen">
+</head>
+<body>
+<header th:replace="~{common/top::Header}"></header>
+
+<div id="Content">
+  <div id="BackLink">
+    <a th:href="@{/manage/manageItem}">Return to Item Management</a>
+  </div>
+
+  <div id="Catalog">
+    <h2>Update Inventory Stock</h2>
+    <form th:action="@{/manage/updateStock}" method="post">
+      <table class="manage-table" style="margin: 0 auto;">
+        <tr>
+          <td>Item ID (SKU):</td>
+          <td>
+            <input type="text" name="itemId" th:value="${item.itemId}" readonly style="background-color: #eee;"/>
+          </td>
+        </tr>
+        <tr>
+          <td>Product ID:</td>
+          <td>
+            <input type="text" th:value="${item.productId}" disabled style="background-color: #eee;"/>
+          </td>
+        </tr>
+        <tr>
+          <td>Current Quantity:</td>
+          <td>
+            <input type="number" name="quantity" th:value="${item.quantity}" required min="0" style="font-weight: bold; color: blue;"/>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" style="text-align: center;">
+            <input type="submit" value="Save Stock" class="Button" />
+          </td>
+        </tr>
+      </table>
+    </form>
+  </div>
+</div>
+
+<footer th:replace="~{common/bottom::Footer}"></footer>
+</body>
+</html>

@@ -3,17 +3,23 @@ package org.example.petstorespring.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.example.petstorespring.entity.Category;
+import org.example.petstorespring.entity.Inventory;
 import org.example.petstorespring.entity.Item;
 import org.example.petstorespring.entity.Product;
 import org.example.petstorespring.persistence.CategoryMapper;
+import org.example.petstorespring.persistence.InventoryMapper;
 import org.example.petstorespring.persistence.ItemMapper;
 import org.example.petstorespring.persistence.ProductMapper;
 import org.example.petstorespring.service.ManageService;
 import org.example.petstorespring.vo.CategoryVO;
+import org.example.petstorespring.vo.ItemVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service("manageService")
 public class ManageServiceImpl implements ManageService{
@@ -25,6 +31,9 @@ public class ManageServiceImpl implements ManageService{
 
     @Autowired
     private ItemMapper itemMapper;
+
+    @Autowired
+    private InventoryMapper inventoryMapper;
 
     @Override
     public List<Category> getAllCategories() {
@@ -128,5 +137,148 @@ public class ManageServiceImpl implements ManageService{
     @Override
     public void updateProduct(Product product) {
         productMapper.updateById(product);
+    }
+
+    @Override
+    public List<ItemVO> searchItems(String categoryId, String productId, String keyword) {
+        LambdaQueryWrapper<Item> itemWrapper = new LambdaQueryWrapper<>();
+
+        // 🎯 1. 处理下拉框的查询条件
+        if (productId != null && !productId.trim().isEmpty()) {
+            // 如果用户精确选择了某个产品（比如斑点狗），直接查这个产品下的 SKU
+            itemWrapper.eq(Item::getProductId, productId);
+        } else if (categoryId != null && !categoryId.trim().isEmpty()) {
+            // 如果用户只选了分类（比如 DOGS），我们需要先查出 DOGS 下所有的产品 ID
+            LambdaQueryWrapper<Product> prodWrapper = new LambdaQueryWrapper<>();
+            prodWrapper.eq(Product::getCategoryId, categoryId);
+            List<Product> products = productMapper.selectList(prodWrapper);
+
+            if (products.isEmpty()) {
+                // 这个分类下连产品都没有，肯定没有具体的 Item，直接返回空集合
+                return new ArrayList<>();
+            }
+
+            // 把产品列表转换成 productId 的集合 (用了 Java 8 的 Stream API，非常优雅)
+            List<String> productIds = products.stream().map(Product::getProductId).collect(Collectors.toList());
+
+            // 告诉 Item 表：只要你的 productId 在这个集合里，就统统交出来！
+            itemWrapper.in(Item::getProductId, productIds);
+        }
+
+        // 🎯 2. 处理关键字查询（模糊匹配 ItemID）
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            itemWrapper.like(Item::getItemId, keyword);
+        }
+
+        // 🎯 3. 执行查询，拿到基础的 Item 列表
+        List<Item> itemList = itemMapper.selectList(itemWrapper);
+
+        // 🎯 4. 组装终极形态的 ItemVO 列表（跨表捞数据）
+        List<ItemVO> itemVOList = new ArrayList<>();
+        for (Item item : itemList) {
+            ItemVO vo = new ItemVO();
+
+            // 把 Item 里的基础数据（主键、价格、状态等）拷贝到 VO 里
+            // 如果属性名一致，可以用 BeanUtils.copyProperties(item, vo); 偷懒
+            vo.setItemId(item.getItemId());
+            vo.setProductId(item.getProductId());
+            vo.setListPrice(item.getListPrice());
+            vo.setStatus(item.getStatus());
+
+            // 🌟 跨表 1：去 Inventory 表查库存
+            Inventory inventory = inventoryMapper.selectById(item.getItemId());
+            if (inventory != null) {
+                vo.setQuantity(inventory.getQuantity());
+            } else {
+                vo.setQuantity(0); // 防空指针，没记录就当 0 库存
+            }
+
+            // 🌟 跨表 2：去 Product 表查名字（为了页面展示更好看）
+            Product product = productMapper.selectById(item.getProductId());
+            if (product != null) {
+                vo.setProductName(product.getName());
+                vo.setCategoryId(product.getCategoryId());
+            }
+
+            itemVOList.add(vo);
+        }
+
+        return itemVOList;
+    }
+
+    @Override
+    public void toggleItemStatus(String itemId, String currentStatus) {
+        Item item = itemMapper.selectById(itemId);
+        if (item != null) {
+            // 简单的逻辑翻转
+            String newStatus = "P".equals(currentStatus) ? "N" : "P";
+            item.setStatus(newStatus);
+            itemMapper.updateById(item);
+        }
+    }
+
+    @Override
+    public ItemVO getItemVOById(String itemId) {
+        Item item = itemMapper.selectById(itemId);
+        if (item == null) return null;
+
+        ItemVO vo = new ItemVO();
+        vo.setItemId(item.getItemId());
+        vo.setProductId(item.getProductId());
+
+        // 查库存
+        Inventory inventory = inventoryMapper.selectById(itemId);
+        vo.setQuantity(inventory != null ? inventory.getQuantity() : 0);
+
+        return vo;
+    }
+
+    @Override
+    public void updateStock(String itemId, Integer quantity) {
+        // 先去数据库查一下有没有这个商品的库存记录
+        Inventory inventory = inventoryMapper.selectById(itemId);
+
+        if (inventory != null) {
+            // 如果有，直接更新数量
+            inventory.setQuantity(quantity);
+            inventoryMapper.updateById(inventory);
+        } else {
+            // 🚨 防御性处理：如果连记录都没有，就新建一条插入进去
+            Inventory newInventory = new Inventory();
+            newInventory.setItemId(itemId);
+            newInventory.setQuantity(quantity);
+            inventoryMapper.insert(newInventory);
+        }
+    }
+
+    @Override
+    @Transactional // 🌟 极其重要：保证两张表要么同时成功，要么同时回滚报错
+    public void addItem(Item item, Integer quantity ,int supplier) {
+        // 1. 处理默认状态：如果没填，默认设为 "P" (上架)
+        if (item.getStatus() == null || item.getStatus().isEmpty()) {
+            item.setStatus("P");
+        }
+
+        item.setSupplier(supplier);
+
+        // 2. 插入主表 Item
+        itemMapper.insert(item);
+
+        // 3. 插入子表 Inventory (库存)
+        Inventory inventory = new Inventory();
+        inventory.setItemId(item.getItemId());
+        inventory.setQuantity(quantity != null ? quantity : 0);
+        inventoryMapper.insert(inventory);
+    }
+
+    @Override
+    @Transactional // 🌟 同样需要事务控制
+    public void deleteItem(String itemId) {
+        // 🚨 铁律：删数据必须先删子表，再删主表！
+        // 1. 先删库存表
+        inventoryMapper.deleteById(itemId);
+
+        // 2. 再删商品表
+        itemMapper.deleteById(itemId);
     }
 }
