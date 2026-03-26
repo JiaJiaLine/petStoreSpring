@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Product</title>
+    <link rel="stylesheet" th:href="@{/css/mypetstore.css}" type="text/css" media="screen">
+</head>
+<body>
+<header th:replace="~{common/top::Header}"></header>
+
+<div id="Content">
+    <div id="BackLink">
+        <a th:href="@{/manage/manageProduct}">Return to Product List</a>
+    </div>
+
+    <div id="Catalog">
+        <h2>Edit Product</h2>
+        <form th:action="@{/manage/editProduct}" method="post">
+            <table class="manage-table" style="margin: 0 auto;">
+                <tr>
+                    <td>Product ID:</td>
+                    <td><input type="text" name="productId" th:value="${product.productId}" readonly style="background-color: #eee;"/></td>
+                </tr>
+                <tr>
+                    <td>Category:</td>
+                    <td>
+                        <select name="categoryId" required>
+                            <option th:each="cat : ${categoryList}"
+                                    th:value="${cat.categoryId}"
+                                    th:text="${cat.name}"
+                                    th:selected="${cat.categoryId == product.categoryId}">
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Name:</td>
+                    <td><input type="text" name="name" th:value="${product.name}" required/></td>
+                </tr>
+                <tr>
+                    <td>Description:</td>
+                    <td>
+                        <textarea name="description" rows="4" cols="50" th:text="${product.description}"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: center;">
+                        <input type="submit" value="Update Product" class="Button" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+
+<footer th:replace="~{common/bottom::Footer}"></footer>
+</body>
+</html>

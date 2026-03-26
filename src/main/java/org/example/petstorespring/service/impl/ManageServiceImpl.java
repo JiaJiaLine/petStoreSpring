@@ -3,8 +3,10 @@ package org.example.petstorespring.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.example.petstorespring.entity.Category;
+import org.example.petstorespring.entity.Item;
 import org.example.petstorespring.entity.Product;
 import org.example.petstorespring.persistence.CategoryMapper;
+import org.example.petstorespring.persistence.ItemMapper;
 import org.example.petstorespring.persistence.ProductMapper;
 import org.example.petstorespring.service.ManageService;
 import org.example.petstorespring.vo.CategoryVO;
@@ -20,6 +22,9 @@ public class ManageServiceImpl implements ManageService{
 
     @Autowired
     private ProductMapper productMapper;
+
+    @Autowired
+    private ItemMapper itemMapper;
 
     @Override
     public List<Category> getAllCategories() {
@@ -70,5 +75,58 @@ public class ManageServiceImpl implements ManageService{
     public void updateCategory(Category category) {
         // 修改：根据主键 ID 更新其他字段
         categoryMapper.updateById(category);
+    }
+
+    @Override
+    public List<Product> getAllProducts() {
+        return productMapper.selectList(null);
+    }
+
+    @Override
+    public List<Product> searchProducts(String keyword, String categoryId) {
+        LambdaQueryWrapper<Product> wrapper = new LambdaQueryWrapper<>();
+
+        // 1. 如果选了具体的 Category，就加上这个条件
+        if (categoryId != null && !categoryId.trim().isEmpty()) {
+            wrapper.eq(Product::getCategoryId, categoryId);
+        }
+
+        // 2. 如果填了关键字，就模糊匹配 Name 或 ProductId
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            wrapper.and(w -> w.like(Product::getName, keyword)
+                    .or()
+                    .like(Product::getProductId, keyword));
+        }
+
+        return productMapper.selectList(wrapper);
+    }
+
+    @Override
+    public boolean deleteProductSafe(String productId) {
+        // 检查 Item 表里是否还有这个 productId 的数据
+        LambdaQueryWrapper<Item> itemWrapper = new LambdaQueryWrapper<>();
+        itemWrapper.eq(Item::getProductId, productId);
+
+        if (itemMapper.selectCount(itemWrapper) > 0) {
+            return false; // 还有子商品，拒绝删除！
+        }
+
+        productMapper.deleteById(productId);
+        return true;
+    }
+
+    @Override
+    public Product getProductById(String productId) {
+        return productMapper.selectById(productId);
+    }
+
+    @Override
+    public void addProduct(Product product) {
+        productMapper.insert(product);
+    }
+
+    @Override
+    public void updateProduct(Product product) {
+        productMapper.updateById(product);
     }
 }

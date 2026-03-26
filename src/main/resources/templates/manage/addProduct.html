@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Product</title>
+    <link rel="stylesheet" th:href="@{/css/mypetstore.css}" type="text/css" media="screen">
+</head>
+<body>
+<header th:replace="~{common/top::Header}"></header>
+
+<div id="Content">
+    <div id="BackLink">
+        <a th:href="@{/manage/manageProduct}">Return to Product List</a>
+    </div>
+
+    <div id="Catalog">
+        <h2>Add New Product</h2>
+        <form th:action="@{/manage/addProduct}" method="post">
+            <table class="manage-table" style="margin: 0 auto;">
+                <tr>
+                    <td>Product ID:</td>
+                    <td><input type="text" name="productId" required placeholder="e.g. K9-BD-01"/></td>
+                </tr>
+                <tr>
+                    <td>Category:</td>
+                    <td>
+                        <select name="categoryId" required>
+                            <option value="">-- Select Category --</option>
+                            <option th:each="cat : ${categoryList}"
+                                    th:value="${cat.categoryId}"
+                                    th:text="${cat.name}">
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Name:</td>
+                    <td><input type="text" name="name" required placeholder="e.g. Bulldog"/></td>
+                </tr>
+                <tr>
+                    <td>Description:</td>
+                    <td>
+                        <textarea name="description" rows="4" cols="50" placeholder="Supports HTML tags like image src='...'"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: center;">
+                        <input type="submit" value="Save Product" class="Button" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+
+<footer th:replace="~{common/bottom::Footer}"></footer>
+</body>
+</html>

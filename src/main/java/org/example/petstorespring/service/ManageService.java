@@ -2,6 +2,7 @@ package org.example.petstorespring.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.example.petstorespring.entity.Category;
+import org.example.petstorespring.entity.Product;
 import org.example.petstorespring.vo.CategoryVO;
 
 import java.util.List;
@@ -20,4 +21,15 @@ public interface ManageService{
     Category getCategoryById(String categoryId); // 回显修改页面用的
     void addCategory(Category category);         // 新增保存
     void updateCategory(Category category);      // 修改保存
+
+    List<Product> getAllProducts();
+    // 组合搜索：关键字 + 分类ID
+    List<Product> searchProducts(String keyword, String categoryId);
+    // 安全删除：检查是否有子 Item
+    boolean deleteProductSafe(String productId);
+
+    // ================== Product 增改查 ==================
+    Product getProductById(String productId); // 回显数据用
+    void addProduct(Product product);         // 新增保存
+    void updateProduct(Product product);      // 修改保存
 }
