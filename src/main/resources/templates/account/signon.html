@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign In - MyPetStore</title>
+    <link rel="StyleSheet" href="css/mypetstore.css" type="text/css" media="screen"/>
+</head>
+<body>
+<header th:replace="common/top "></header>
+
+<div id="Content">
+    <div id="Catalog">
+
+        <form action="/account/signOn" th:action="@{/account/signOn}" method="post">
+            <p>Please enter your username and password.</p>
+
+            <p th:if="${signOn != null and signOn.signOnMsg != null}">
+                <font color="red" th:text="${signOn.signOnMsg}">Error Message</font>
+            </p>
+
+            <p>
+                Username: <input type="text" name="username" id="username"> <br />
+                Password: <input type="password" name="password">
+            </p>
+
+            <p>
+                请输入验证码：<input type="text" id="inputCode">
+                <span id="codeDisplay" style="font-weight:bold; letter-spacing:3px; background:#eee; padding:2px 5px;"></span>
+                <button type="button" onclick="createCode()">Refresh</button>
+            </p>
+
+            <script>
+                function createCode() {
+                    let code = Math.floor(1000 + Math.random() * 9000); // 生成4位随机数
+                    document.getElementById("codeDisplay").innerText = code;
+                }
+                createCode();
+            </script>
+
+            <input type="submit" value="Login">
+        </form>
+
+        Need a username and password?
+        <a href="/account/editAccountForm" th:href="@{/account/editAccountForm}">Register Now!</a>
+    </div>
+</div>
+
+<footer th:replace="common/bottom "></footer>
+
+</body>
+</html>
