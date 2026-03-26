@@ -13,4 +13,5 @@ public interface AccountService {
     LoginAccountVO getLoginAccount();
     void updateAccount(LoginAccountVO loginAccountVO, HttpSession session);
     void setAccount(Account newaccount);
+    void generateCaptcha(String captcha, HttpSession session);
 }

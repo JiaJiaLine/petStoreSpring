@@ -35,7 +35,11 @@
                 <tr>
                     <td>Repeat password:</td>
                     <td>
-                        <input type="text" name="repeatedPassword">
+                        <input type="password" name="repeatPassword"
+                               th:value="${session.loginAccount.repeatPassword}">
+                        <span th:if="${session.loginAccount != null and session.loginAccount.msg != null and session.loginAccount.msg.contains('不一致')}"
+                              style="color: red; font-size: 12px;">两次密码输入不一致</span>
+
                     </td>
                 </tr>
             </table>
