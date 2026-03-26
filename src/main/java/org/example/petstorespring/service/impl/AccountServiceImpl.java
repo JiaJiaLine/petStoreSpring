@@ -73,6 +73,7 @@ public class AccountServiceImpl implements AccountService {
         account=newaccount;
 }
 
+    //哈哈哈
     @Override
     public void generateCaptcha(String captcha, HttpSession session) {
         session.setAttribute("captchaCode", captcha);

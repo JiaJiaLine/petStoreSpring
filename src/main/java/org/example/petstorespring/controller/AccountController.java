@@ -38,13 +38,13 @@ public class AccountController {
     public String handleSignOnSubmit(
             String username,  // 接收表单 username 参数
             String password,  // 接收表单 password 参数
-            String inputCode,   // 接受用户输入的验证码
+            String inputCode,   // 接受用户输入的验证码哈哈哈
             Model model,
             HttpSession session) {
 
         SignOnVO signOnVO = accountService.getSignOn(username, password);
 
-        // 验证码
+        // 验证码哈哈哈
         String generatedCode = (String) session.getAttribute("captchaCode");
         if (generatedCode == null || !generatedCode.equals(inputCode)) {
             signOnVO.setSignOnMsg("验证码错误");
@@ -97,10 +97,10 @@ public class AccountController {
     @PostMapping("/account/editAccount")
     public String postEdit(  LoginAccountVO loginAccountVO,String repeatPassword,HttpSession session)
     {
-        // 验证重复密码
+        // 验证重复密码哈哈哈
         if (loginAccountVO.getPassword() != null && !loginAccountVO.getPassword().isEmpty()) {
             if (repeatPassword == null || !loginAccountVO.getPassword().equals(repeatPassword)) {
-                loginAccountVO.setMsg("两次输入的密码不一致");
+                loginAccountVO.setMsg("两次输入的密码不一致啊");
                 session.setAttribute("loginAccount", loginAccountVO);
                 return "account/editAccount";
             }
