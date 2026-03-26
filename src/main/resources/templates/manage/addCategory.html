@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Category</title>
+    <link rel="stylesheet" th:href="@{/css/mypetstore.css}" type="text/css" media="screen">
+</head>
+<body>
+<header th:replace="~{common/top::Header}"></header>
+
+<div id="Content">
+    <div id="BackLink">
+        <a th:href="@{/manage/manageCategory}">Return to Category List</a>
+    </div>
+
+    <div id="Catalog">
+        <h2>Add New Category</h2>
+        <form th:action="@{/manage/addCategory}" method="post">
+            <table class="manage-table">
+                <tr>
+                    <td>Category ID:</td>
+                    <td><input type="text" name="categoryId" required placeholder="e.g. BIRDS"/></td>
+                </tr>
+                <tr>
+                    <td>Name:</td>
+                    <td><input type="text" name="name" required placeholder="e.g. Birds"/></td>
+                </tr>
+                <tr>
+                    <td>Description:</td>
+                    <td><input type="text" name="description" size="50"/></td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: center;">
+                        <input type="submit" value="Save Category" class="Button" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+
+<footer th:replace="~{common/bottom::Footer}"></footer>
+</body>
+</html>

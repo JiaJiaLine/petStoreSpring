@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Category Management</title>
+    <link rel="stylesheet" th:href="@{/css/mypetstore.css}" type="text/css" media="screen">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        /* 增加一些基础表格样式，你也可以把这些整合进 mypetstore.css 中 */
+
+    </style>
+</head>
+<body>
+<header th:replace="~{common/top::Header}"></header>
+
+<div id="Content">
+
+    <div id="BackLink">
+        <a th:href="@{/catalog/index}">Return to Main Menu</a>
+    </div>
+
+    <div id="Catalog">
+        <h2>Category Management</h2>
+
+        <div id="Search">
+            <div id="SearchContent" class="search-add-container">
+                <form th:action="@{/manage/searchCategory}" method="post" style="margin: 0;">
+                    <input type="text" name="keyword" size="20" id="keyword" placeholder="Enter category name..."/>
+                    <input type="submit" value="Search"/>
+                </form>
+
+                <form th:action="@{/manage/addCategoryPage}" method="get" style="margin: 0;">
+                    <input type="submit" value="Add New Category" />
+                </form>
+
+                <div th:if="${msg != null}" th:text="${msg}" style="color: #005e21; font-weight: bold; margin-bottom: 10px;"></div>
+            </div>
+
+            <div id="categorySearchComplete">
+                <ul id="categorySearchUl"></ul>
+            </div>
+        </div>
+
+        <table class="manage-table">
+            <thead>
+            <tr>
+                <th>Category ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="category : ${categoryList}">
+                <td th:text="${category.categoryId}">DOGS</td>
+                <td th:text="${category.name}">Dogs</td>
+                <td th:text="${category.description}">Various breeds of dogs</td>
+                <td>
+                    <a class="action-btn" th:href="@{/manage/editCategoryPage(categoryId=${category.categoryId})}">Edit</a>
+                    <a class="action-btn delete-btn" th:href="@{/manage/deleteCategory(categoryId=${category.categoryId})}"
+                       onclick="return confirm('Are you sure you want to delete this category?');">Delete</a>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(categoryList)}">
+                <td colspan="4" style="text-align: center; color: #666;">No categories found.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<footer th:replace="~{common/bottom::Footer}"></footer>
+</body>
+</html>
