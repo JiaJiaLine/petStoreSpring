@@ -355,3 +355,43 @@ body>#Banner {
     font-weight: bold;
 
 }
+
+#SearchContent{
+    width: auto;
+    height: 9ex;
+    margin: 0ex 0ex 0ex 0ex;
+    padding: 0ex 0ex 0ex 0ex;
+    border-width: 0ex 0ex .3ex 0px;
+    border-style: solid;
+    border-color: #ccc;
+    float: left;
+    text-align: center;
+    background-color: #000;
+    color: #eaac00;
+    line-height: 9ex;
+    voice-family: "\"}\"";
+    voice-family: inherit;
+    height: 9ex;
+}
+
+#CategorySearchContent{
+    width: auto;
+    height: 9ex;
+    margin: 0ex 0ex 0ex 0ex;
+    padding: 0ex 0ex 0ex 0ex;
+    border-width: 0ex 0ex .3ex 0px;
+    border-style: solid;
+    border-color: #ccc;
+    float: left;
+    text-align: center;
+    background-color: #000;
+    color: #eaac00;
+    line-height: 9ex;
+    voice-family: "\"}\"";
+    voice-family: inherit;
+    height: 162px;
+}
+
+.alert-msg { font-weight: bold; margin-bottom: 10px; text-align: center; }
+.msg-success { color: green; }
+.msg-error { color: red; }

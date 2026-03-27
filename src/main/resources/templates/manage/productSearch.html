@@ -9,7 +9,6 @@
 <header th:replace="~{common/top::Header}"></header>
 
 <div id="Content">
-  <div th:if="${msg != null}" th:text="${msg}" style="color: red; font-weight: bold; margin-bottom: 10px; text-align: center;"></div>
 
   <div id="BackLink">
     <a th:href="@{/catalog/index}">Return to Main Menu</a> |
@@ -19,7 +18,7 @@
   <div id="Catalog">
     <h2>Product Management</h2>
 
-    <div id="Search">
+
       <div id="SearchContent" class="search-add-container">
         <form th:action="@{/manage/searchProduct}" method="post" style="margin: 0; display: flex; gap: 10px;">
 
@@ -41,6 +40,12 @@
           <input type="submit" value="Add New Product" class="Button" />
         </form>
       </div>
+
+
+    <div th:if="${msg != null}"
+         class="alert-msg"
+         th:text="${msg}"
+         th:classappend="${msgType == 'Success'} ? 'msg-success':'msg-error'" >
     </div>
 
     <table class="manage-table" style="margin: 0 auto; text-align: center; width: 100%;">

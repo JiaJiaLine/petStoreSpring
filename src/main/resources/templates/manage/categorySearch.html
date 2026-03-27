@@ -19,8 +19,7 @@
     <div id="Catalog">
         <h2>Category Management</h2>
 
-        <div id="Search">
-            <div id="SearchContent" class="search-add-container">
+            <div id="CategorySearchContent" class="search-add-container">
                 <form th:action="@{/manage/searchCategory}" method="post" style="margin: 0;">
                     <input type="text" name="keyword" size="20" id="keyword" placeholder="Enter category name..."/>
                     <input type="submit" value="Search"/>
@@ -30,15 +29,16 @@
                     <input type="submit" value="Add New Category" />
                 </form>
 
-                <div th:if="${msg != null}" th:text="${msg}" style="color: #005e21; font-weight: bold; margin-bottom: 10px;"></div>
+                <div th:if="${msg != null}"
+                     th:text="${msg}"
+                     th:class="'alart-msg'"
+                     th:classappend="${msgType == 'Success'} ? 'msg-success' : 'msg-error'">
+                </div>
             </div>
 
             <div id="categorySearchComplete">
                 <ul id="categorySearchUl"></ul>
             </div>
-            //ajex后续开发中
-
-        </div>
 
         <table class="manage-table">
             <thead>

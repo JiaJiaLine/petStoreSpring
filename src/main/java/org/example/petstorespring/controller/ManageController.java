@@ -44,9 +44,11 @@ public class ManageController {
         if (isDeleted) {
             // 删除成功，使用 RedirectAttributes 传递成功提示
             redirectAttributes.addFlashAttribute("msg", "Successfully deleted category: " + categoryId);
+            redirectAttributes.addFlashAttribute("msgType", "Success");
         } else {
             // 删除失败（有子产品），传递错误提示
             redirectAttributes.addFlashAttribute("msg", "Cannot delete! There are still products under category: " + categoryId);
+            redirectAttributes.addFlashAttribute("msgType", "Error");
         }
 
         // 删除完重定向回主页，防止刷新表单重复提交
@@ -64,6 +66,7 @@ public class ManageController {
     public String addCategory(Category category, RedirectAttributes redirectAttributes) {
         manageService.addCategory(category);
         redirectAttributes.addFlashAttribute("msg", "Successfully added new category!");
+        redirectAttributes.addFlashAttribute("msgType", "Success");
         return "redirect:/manage/manageCategory"; // 保存完跳回列表页
     }
 
@@ -82,6 +85,7 @@ public class ManageController {
     public String editCategory(Category category, RedirectAttributes redirectAttributes) {
         manageService.updateCategory(category);
         redirectAttributes.addFlashAttribute("msg", "Successfully updated category!");
+        redirectAttributes.addFlashAttribute("msgType", "Success");
         return "redirect:/manage/manageCategory"; // 保存完跳回列表页
     }
 
@@ -121,8 +125,10 @@ public class ManageController {
         boolean isDeleted = manageService.deleteProductSafe(productId);
         if (isDeleted) {
             redirectAttributes.addFlashAttribute("msg", "Successfully deleted product: " + productId);
+            redirectAttributes.addFlashAttribute("msgType", "Success");
         } else {
             redirectAttributes.addFlashAttribute("msg", "Cannot delete! There are still items under product: " + productId);
+            redirectAttributes.addFlashAttribute("msgType", "Error");
         }
         return "redirect:/manage/manageProduct";
     }
@@ -140,6 +146,7 @@ public class ManageController {
     public String addProduct(Product product, RedirectAttributes redirectAttributes) {
         manageService.addProduct(product);
         redirectAttributes.addFlashAttribute("msg", "Successfully added new product!");
+        redirectAttributes.addFlashAttribute("msgType", "Success");
         return "redirect:/manage/manageProduct"; // 成功后跳回列表页
     }
 
@@ -159,6 +166,7 @@ public class ManageController {
     public String editProduct(Product product, RedirectAttributes redirectAttributes) {
         manageService.updateProduct(product);
         redirectAttributes.addFlashAttribute("msg", "Successfully updated product!");
+        redirectAttributes.addFlashAttribute("msgType", "Success");
         return "redirect:/manage/manageProduct";
     }
 
@@ -210,6 +218,7 @@ public class ManageController {
         // 动态提示信息
         String action = "P".equals(currentStatus) ? "Delisted" : "Listed";
         redirectAttributes.addFlashAttribute("msg", "Item " + itemId + " has been " + action + " successfully!");
+        redirectAttributes.addFlashAttribute("msgType", "Success");
 
         return "redirect:/manage/manageItem"; // 完事跳回列表页，你会发现状态变色了
     }
@@ -234,6 +243,7 @@ public class ManageController {
         manageService.updateStock(itemId, quantity);
 
         redirectAttributes.addFlashAttribute("msg", "Successfully updated stock for Item: " + itemId);
+        redirectAttributes.addFlashAttribute("msgType", "Success");
         return "redirect:/manage/manageItem";
     }
 
@@ -254,6 +264,7 @@ public class ManageController {
                           RedirectAttributes redirectAttributes,int supplier) {
         manageService.addItem(item, quantity,supplier);
         redirectAttributes.addFlashAttribute("msg", "Successfully added new SKU: " + item.getItemId());
+        redirectAttributes.addFlashAttribute("msgType", "Success");
         return "redirect:/manage/manageItem";
     }
 
@@ -262,6 +273,7 @@ public class ManageController {
     public String deleteItem(@RequestParam("itemId") String itemId, RedirectAttributes redirectAttributes) {
         manageService.deleteItem(itemId);
         redirectAttributes.addFlashAttribute("msg", "Successfully deleted SKU: " + itemId);
+        redirectAttributes.addFlashAttribute("msgType", "Success");
         return "redirect:/manage/manageItem";
     }
 }
