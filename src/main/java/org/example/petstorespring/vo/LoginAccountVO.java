@@ -25,4 +25,5 @@ public class LoginAccountVO {
     private String bannerName;
     private String Msg;
     private String repeatPassword;
+    private boolean isManager;
 }

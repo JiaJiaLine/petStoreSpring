@@ -1,6 +1,7 @@
 package org.example.petstorespring.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import jakarta.servlet.http.HttpSession;
 import org.example.petstorespring.entity.Category;
 import org.example.petstorespring.entity.Item;
 import org.example.petstorespring.entity.Product;
@@ -52,4 +53,6 @@ public interface ManageService{
 
     // 彻底删除 SKU（同时删除 Inventory 表和 Item 表）
     void deleteItem(String itemId);
+
+    String openUser(HttpSession session);
 }

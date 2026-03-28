@@ -116,6 +116,7 @@ public class AccountServiceImpl implements AccountService {
         loginAccountVO.setLastName(account.getLastName()); // 可空
         loginAccountVO.setState(account.getState());
         loginAccountVO.setPhone(account.getPhone());
+        loginAccountVO.setManager(account.getIsManager());
 
         // Profile
         if (profile != null) {

@@ -2,6 +2,7 @@ package org.example.petstorespring.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import jakarta.servlet.http.HttpSession;
 import org.example.petstorespring.entity.Category;
 import org.example.petstorespring.entity.Inventory;
 import org.example.petstorespring.entity.Item;
@@ -13,6 +14,7 @@ import org.example.petstorespring.persistence.ProductMapper;
 import org.example.petstorespring.service.ManageService;
 import org.example.petstorespring.vo.CategoryVO;
 import org.example.petstorespring.vo.ItemVO;
+import org.example.petstorespring.vo.LoginAccountVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -281,4 +283,16 @@ public class ManageServiceImpl implements ManageService{
         // 2. 再删商品表
         itemMapper.deleteById(itemId);
     }
+
+    @Override
+    public String openUser(HttpSession session) {
+        if(session.getAttribute("loginAccount") == null){
+            return "null";
+        }
+        LoginAccountVO loginAccount = (LoginAccountVO)session.getAttribute("loginAccount");
+        if (loginAccount.isManager()) {
+            return "manager";
+        }else return "user";
+    }
+
 }
