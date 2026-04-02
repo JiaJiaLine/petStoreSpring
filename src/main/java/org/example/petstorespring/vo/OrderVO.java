@@ -1,53 +1,20 @@
 package org.example.petstorespring.vo;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.example.petstorespring.entity.LineItem;
+import org.example.petstorespring.entity.Orders;
+
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
-public class OrderVO {
-    private String orderId;
-    private String userId;
-    private Date orderTime;       // 前端更易懂的名字
-    private BigDecimal totalAmount;
-    private String statusText;    // 已支付 / 未支付
+@Data
+@EqualsAndHashCode(callSuper = true) // 加上这个注解，Lombok 会自动处理父类属性的比较
+public class OrderVO extends Orders {
+    // 🌟 专门为前端展示附加的明细列表
+    private List<LineItem> lineItems;
 
-    // getter setter
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public Date getOrderTime() {
-        return orderTime;
-    }
-
-    public void setOrderTime(Date orderTime) {
-        this.orderTime = orderTime;
-    }
-
-    public BigDecimal getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(BigDecimal totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
-    public String getStatusText() {
-        return statusText;
-    }
-
-    public void setStatusText(String statusText) {
-        this.statusText = statusText;
-    }
+    // 🌟 专门为前端展示附加的当前状态 (比如 "P" 或 "S")
+    private String currentStatus;
 }

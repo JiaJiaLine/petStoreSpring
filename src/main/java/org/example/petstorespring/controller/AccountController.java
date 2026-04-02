@@ -4,7 +4,9 @@ package org.example.petstorespring.controller;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.example.petstorespring.entity.Account;
+import org.example.petstorespring.entity.CartItem;
 import org.example.petstorespring.service.AccountService;
+import org.example.petstorespring.service.CartService;
 import org.example.petstorespring.vo.LoginAccountVO;
 import org.example.petstorespring.vo.SignOnVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ import java.util.Map;
 @Controller
 //@RequestMapping("/account")
 public class AccountController {
+
+    @Autowired
+    private CartService cartService;
 
     @Autowired
     private AccountService accountService;
@@ -58,6 +63,15 @@ public class AccountController {
        session.setAttribute("authenticated",true);
         LoginAccountVO loginAccountVO=accountService.getLoginAccount();
         session.setAttribute("loginAccount",loginAccountVO);
+
+        //登录合并购物车
+        Map<String, CartItem> sessionCart = (Map<String, CartItem>) session.getAttribute("sessionCart");
+        if (sessionCart != null && !sessionCart.isEmpty()) {
+            // 调用合并大招
+            cartService.mergeSessionCartToDb(loginAccountVO.getUsername(), sessionCart);
+            // 合并完一定要把 Session 里的车砸烂（清空），以后全走数据库！
+            session.removeAttribute("sessionCart");
+        }
 
         if (signOnVO.getSignOnMsg() == null) {
             return "catalog/main";

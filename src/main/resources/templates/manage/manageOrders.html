@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>订单管理 - JPetStore Admin</title>
+  <link rel="stylesheet" th:href="@{/css/jpetstore.css}">
+
+</head>
+<body>
+<header th:replace="~{common/top::Header}"></header>
+
+<div id="Content">
+  <div id="BackLink"><a th:href="@{/manage/index}">返回管理主页</a></div>
+
+  <h2>订单管理中心</h2>
+
+  <table class="manage-table">
+    <thead>
+    <tr>
+      <th>订单ID</th>
+      <th>用户ID</th>
+      <th>日期</th>
+      <th>总价</th>
+      <th>当前状态</th>
+      <th>收货人</th>
+      <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="order : ${orderList}">
+      <td th:text="${order.orderId}">1001</td>
+      <td th:text="${order.userId}">j2ee</td>
+      <td th:text="${#dates.format(order.orderDate, 'yyyy-MM-dd HH:mm')}">2026-03-31</td>
+      <td th:text="${'$' + order.totalPrice}">$99.00</td>
+      <td>
+                    <span th:class="${'status-' + order.currentStatus}"
+                          th:text="${order.currentStatus == 'P' ? '待发货' : '已发货'}">待发货</span>
+      </td>
+      <td th:text="${order.shipToFirstName + ' ' + order.shipToLastName}">John Doe</td>
+      <td>
+        <a th:href="@{/order/viewOrder(orderId=${order.orderId})}" style="margin-right: 10px;">详情</a>
+        <a th:if="${order.currentStatus == 'P'}"
+           th:href="@{/manage/shipOrder(orderId=${order.orderId})}"
+           class="btn-ship" onclick="return confirm('确认发货吗？')">点击发货</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<footer th:replace="~{common/bottom::Footer}"></footer>
+</body>
+</html>

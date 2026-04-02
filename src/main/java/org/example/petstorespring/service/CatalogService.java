@@ -1,5 +1,6 @@
 package org.example.petstorespring.service;
 
+import org.example.petstorespring.entity.Item;
 import org.example.petstorespring.vo.CategoryVO;
 import org.example.petstorespring.vo.ItemVO;
 import org.example.petstorespring.vo.ProductVO;

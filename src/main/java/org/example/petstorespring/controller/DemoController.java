@@ -19,4 +19,9 @@ public class DemoController {
         model.addAttribute("messages","hello demo1");
         return "demo1";
     }
+
+    @GetMapping("/modify")
+    public String modify(){
+        return "modify/Modify";
+    }
 }

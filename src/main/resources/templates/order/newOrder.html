@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>New Order</title>
+    <link rel="stylesheet" th:href="@{/css/mypetstore.css}" type="text/css" media="screen">
+</head>
+<body>
+<header th:replace="~{common/top::Header}"></header>
+    <div id="Content">
+        <div id="BackLink">
+            <a th:href="@{/catalog/index}">Return to Main Menu</a>
+        </div>
+        <div id="Catalog">
+            <form th:action="@{/order/confirmOrder}" th:object="${order}" method="post">
+                <table class="manage-table" style="margin: 0 auto; width: 60%;">
+                    <tr>
+                        <th colspan="2">Payment Details</th>
+                    </tr>
+                    <tr>
+                        <td>Card Type:</td>
+                        <td>
+                            <select name="cardType">
+                                <option value="Visa">Visa</option>
+                                <option value="MasterCard">MasterCard</option>
+                                <option value="Amex">Amex</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Card Number:</td>
+                        <td><input type="text" name="creditCard" value="9999999999" required /></td>
+                    </tr>
+                    <tr>
+                        <td>Expiry Date (MM/YY):</td>
+                        <td><input type="text" name="exprDate" value="12/28" required /></td>
+                    </tr>
+
+                    <tr>
+                        <th colspan="2">Shipping Address</th>
+                    </tr>
+                    <tr>
+                        <td>First Name:</td>
+                        <td><input type="text" name="shipToFirstName" value="John" required /></td>
+                    </tr>
+                    <tr>
+                        <td>Last Name:</td>
+                        <td><input type="text" name="shipToLastName" value="Doe" required /></td>
+                    </tr>
+                    <tr>
+                        <td>Address 1:</td>
+                        <td><input type="text" name="shipAddr1" value="123 Pet St" required /></td>
+                    </tr>
+                    <tr>
+                        <td>Address 2:</td>
+                        <td><input type="text" name="shipAddr2" value="Apt 4B" /></td>
+                    </tr>
+                    <tr>
+                        <td>City:</td>
+                        <td><input type="text" name="shipCity" value="New York" required /></td>
+                    </tr>
+                    <tr>
+                        <td>State/Province:</td>
+                        <td><input type="text" name="shipState" value="NY" required /></td>
+                    </tr>
+                    <tr>
+                        <td>Zip/Postal Code:</td>
+                        <td><input type="text" name="shipZip" value="10001" required /></td>
+                    </tr>
+                    <tr>
+                        <td>Country:</td>
+                        <td><input type="text" name="shipCountry" value="USA" required /></td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2" style="text-align: center;">
+                            <input type="submit" value="Continue" class="Button"/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+<footer th:replace="~{common/bottom::Footer}"></footer>
+</body>
+</html>

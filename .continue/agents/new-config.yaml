@@ -1,0 +1,10 @@
+name: Example Config
+version: 1.0.0
+schema: v1
+
+models:
+  - name: Claude 3.5 Sonnet (Aliyun)
+    provider: anthropic
+    model: claude-3-5-sonnet-20241022
+    apiKey: sk-sp-2197b8cb8d8d4d8394d2b00e0a4e8aab
+    apiBase: https://coding.dashscope.aliyuncs.com/apps/anthropic/v1

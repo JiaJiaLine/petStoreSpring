@@ -1,10 +1,10 @@
 package org.example.petstorespring.controller;
 
 import jakarta.servlet.http.HttpSession;
-import org.example.petstorespring.entity.Category;
-import org.example.petstorespring.entity.Item;
-import org.example.petstorespring.entity.Product;
+import org.example.petstorespring.entity.*;
+import org.example.petstorespring.service.AccountService;
 import org.example.petstorespring.service.ManageService;
+import org.example.petstorespring.service.OrderService;
 import org.example.petstorespring.vo.ItemVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +19,12 @@ import java.util.List;
 public class ManageController {
     @Autowired
     private ManageService manageService;
+
+    @Autowired
+    private OrderService orderService;
+
+    @Autowired
+    private AccountService accountService;
 
     // 1. 进入 Category 管理主页
     @GetMapping("/manageCategory")
@@ -366,4 +372,49 @@ public class ManageController {
             return "redirect:/manage/manageItem";
         }
     }
+
+    // 1. 订单列表
+    @GetMapping("/manageOrders")
+    public String listOrders(Model model,HttpSession session) {
+        String user = manageService.openUser(session);
+        if(user != "manager"){
+            model.addAttribute("errorMsg", "you're not allow here");
+            return "manage/error";
+        }else {
+            // 你需要在 OrderService 里写一个获取所有订单的方法
+            List<Orders> allOrders = orderService.getAllOrders();
+            model.addAttribute("orderList", allOrders);
+            return "manage/manageOrders";
+        }
+    }
+
+    // 2. 发货动作
+    @GetMapping("/shipOrder")
+    public String shipOrder(Integer orderId,Model model,HttpSession session) {
+        String user = manageService.openUser(session);
+        if(user != "manager"){
+            model.addAttribute("errorMsg", "you're not allow here");
+            return "manage/error";
+        }else {
+            // 发货逻辑：更新 orderstatus 表中该订单的状态为 'S'
+            orderService.updateOrderStatus(orderId, "S");
+            return "redirect:/manage/manageOrders";
+        }
+    }
+
+    // 3. 账号列表
+    @GetMapping("/manageAccounts")
+    public String listAccounts(Model model,HttpSession session) {
+        String user = manageService.openUser(session);
+        if(user != "manager"){
+            model.addAttribute("errorMsg", "you're not allow here");
+            return "manage/error";
+        }else {
+            // 你需要写一个查询所有账号的方法
+            List<Account> allAccounts = accountService.getAllAccounts();
+            model.addAttribute("accountList", allAccounts);
+            return "manage/manageAccounts";
+        }
+    }
 }
+

@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service("accountService")
 public class AccountServiceImpl implements AccountService {
     @Autowired
@@ -214,4 +216,10 @@ public class AccountServiceImpl implements AccountService {
         if (isNewAccount) {
             session.setAttribute("account", account1);
         }
-    }}
+    }
+    @Override
+    public List<Account> getAllAccounts() {
+        // 传入 null 表示没有任何查询条件，即查询所有
+        return accountMapper.selectList(null);
+    }
+}

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Order Receipt</title>
+  <link rel="stylesheet" th:href="@{/css/mypetstore.css}" type="text/css" media="screen">
+</head>
+<body>
+<header th:replace="~{common/top::Header}"></header>
+
+<div id="Content">
+  <div id="BackLink">
+    <a th:href="@{/order/listOrders}">Return to My Orders</a>
+  </div>
+
+  <div id="Catalog">
+    <h2>Order #<span th:text="${order.orderId}"></span></h2>
+    <p><strong>Date: </strong> <span th:text="${#dates.format(order.orderDate, 'yyyy-MM-dd HH:mm')}"></span></p>
+
+    <p><strong>Status: </strong>
+      <span th:if="${order.currentStatus == 'P'}" style="color: orange; font-weight: bold;">Pending (Processing)</span>
+      <span th:if="${order.currentStatus == 'S'}" style="color: green; font-weight: bold;">Shipped</span>
+    </p>
+
+    <table class="manage-table" style="margin: 0 auto; width: 60%; margin-bottom: 30px;">
+      <tr>
+        <th colspan="2">Shipping Address</th>
+      </tr>
+      <tr>
+        <td>Name:</td>
+        <td th:text="${order.shipToFirstName + ' ' + order.shipToLastName}"></td>
+      </tr>
+      <tr>
+        <td>Address:</td>
+        <td th:text="${order.shipAddr1 + ' ' + order.shipCity}"></td>
+      </tr>
+      <tr>
+        <td>Card Paid:</td>
+        <td th:text="${order.cardType + ' (Ends with ' + #strings.substring(order.creditCard, order.creditCard.length() - 4) + ')'}"></td>
+      </tr>
+    </table>
+
+    <table class="manage-table" style="margin: 0 auto; width: 90%; text-align: center;">
+      <tr>
+        <th>Item ID</th>
+        <th>Description</th>
+        <th>Quantity</th>
+        <th>Unit Price</th>
+        <th>Total</th>
+      </tr>
+      <tr th:each="lineItem : ${order.lineItems}">
+        <td>
+          <a th:href="@{/catalog/itemForm(itemId=${lineItem.itemId})}" th:text="${lineItem.itemId}"></a>
+        </td>
+
+        <td th:text="${(lineItem.item.attribute1 != null ? lineItem.item.attribute1 + ' ' : '') +
+                               (lineItem.item.product != null ? lineItem.item.product.name : '')}">
+        </td>
+
+        <td th:text="${lineItem.quantity}"></td>
+        <td th:text="${'$' + #numbers.formatDecimal(lineItem.unitPrice, 1, 'COMMA', 2, 'POINT')}"></td>
+        <td th:text="${'$' + #numbers.formatDecimal(lineItem.total, 1, 'COMMA', 2, 'POINT')}"></td>
+      </tr>
+      <tr>
+        <td colspan="4" style="text-align: right; font-weight: bold; padding-right: 20px;">Grand Total:</td>
+        <td style="font-weight: bold; color: red;" th:text="${'$' + #numbers.formatDecimal(order.totalPrice, 1, 'COMMA', 2, 'POINT')}"></td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<footer th:replace="~{common/bottom::Footer}"></footer>
+</body>
+</html>

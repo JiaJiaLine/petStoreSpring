@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Shopping Cart</title>
+  <link rel="stylesheet" th:href="@{/css/mypetstore.css}" type="text/css" media="screen">
+</head>
+<body>
+<header th:replace="~{common/top::Header}"></header>
+
+<div id="Content">
+  <div id="BackLink">
+    <a th:href="@{/catalog/index}">Return to Main Menu</a>
+  </div>
+
+  <div id="Catalog">
+    <div id="Cart">
+      <h2>Shopping Cart</h2>
+
+      <form th:action="@{/cart/updateCart}" method="post">
+        <table class="manage-table" style="margin: 0 auto; width: 100%; text-align: center;">
+          <thead>
+          <tr>
+            <th>Item ID</th>
+            <th>Product ID</th>
+            <th>Description</th>
+            <th>Quantity</th>
+            <th>List Price</th>
+            <th>Total Cost</th>
+            <th>Action</th>
+          </tr>
+          </thead>
+          <tbody>
+
+          <tr th:if="${#lists.isEmpty(cartItemList)}">
+            <td colspan="7"><b>Your cart is empty.</b></td>
+          </tr>
+
+          <tr th:if="${not #lists.isEmpty(cartItemList)}" th:each="cartItem : ${cartItemList}">
+
+            <td>
+              <a th:href="@{/catalog/itemForm(itemId=${cartItem.itemId})}"
+                 th:text="${cartItem.itemId}"></a>
+            </td>
+
+            <td th:text="${cartItem.item.productId}"></td>
+
+            <td th:text="${(cartItem.item.attribute1 != null ? cartItem.item.attribute1 : '')}"></td>
+
+            <td>
+              <input type="number" min="1" th:name="${cartItem.itemId}" th:value="${cartItem.quantity}" style="width: 50px;">
+            </td>
+
+            <td th:text="${'$' + #numbers.formatDecimal(cartItem.item.listPrice, 1, 'COMMA', 2, 'POINT')}"></td>
+            <td th:text="${'$' + #numbers.formatDecimal(cartItem.total, 1, 'COMMA', 2, 'POINT')}"></td>
+
+            <td>
+              <a th:href="@{/cart/removeItem(workingItemId=${cartItem.itemId})}" class="Button">Remove</a>
+            </td>
+          </tr>
+
+          <tr>
+            <td colspan="6">
+              Sub Total:
+              <span th:text="${'$' + #numbers.formatDecimal(subTotal, 1, 'COMMA', 2, 'POINT')}"></span>
+
+              <input th:if="${not #lists.isEmpty(cartItemList)}" type="submit" value="Update Cart" class="Button" style="margin-left: 20px;">
+            </td>
+            <td>&nbsp;</td>
+          </tr>
+          </tbody>
+        </table>
+      </form>
+
+      <div style="text-align: right; margin-top: 15px;">
+        <a th:if="${not #lists.isEmpty(cartItemList)}"
+           th:href="@{/order/newOrder}" class="Button">Proceed to Checkout</a>
+      </div>
+    </div>
+
+    <div id="MyList" th:if="${session.myList != null and not #lists.isEmpty(session.myList)}" style="margin-top: 40px; text-align: left;">
+      <p style="font-weight: bold; font-size: 1.1em;">Pet Favorites <br />
+        <span style="font-weight: normal; font-size: 0.9em;">Shop for more of your favorite pets here.</span>
+      </p>
+      <ul>
+        <li th:each="product : ${session.myList}">
+          <a th:href="@{/catalog/productForm(productId=${product.productId})}" th:text="${product.name}"></a>
+          <span th:text="' (' + ${product.productId} + ')'"></span>
+        </li>
+      </ul>
+    </div>
+    <div id="Separator">&nbsp;</div>
+  </div>
+</div>
+
+<footer th:replace="~{common/bottom::Footer}"></footer>
+</body>
+</html>

@@ -30,4 +30,7 @@ public class Item {
     private String attribute4;
     @TableField("attr5")
     private String attribute5;
+
+    @TableField(exist = false)
+    private Product product;
 }
