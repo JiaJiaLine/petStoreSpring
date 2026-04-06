@@ -3,27 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <title>账号管理 - JPetStore Admin</title>
-    <link rel="stylesheet" th:href="@{/css/jpetstore.css}">
+    <link rel="stylesheet" th:href="@{/css/mypetstore.css}">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 <body>
 <header th:replace="~{common/top::Header}"></header>
 
 <div id="Content">
-    <div id="BackLink"><a th:href="@{/manage/manageCategory}">返回管理主页</a></div>
+    <div id="BackLink"><a th:href="@{/catalog/index}">Return Main Menu</a></div>
     <div id="Catalog">
 
-    <h2>用户信息管理</h2>
+    <h2>User Management</h2>
+        <div id="SearchContent" class="search-add-container">
+            <form th:action="@{/manage/searchUser}" method="post" style="margin: 0; display: flex; gap: 10px;">
 
+
+
+                <input type="text" name="keyword" size="15" placeholder="User Name..."/>
+                <input type="submit" value="Search" class="Button"/>
+            </form>
+
+
+        </div>
     <table class="manage-table" style="width: 100%;">
         <thead>
         <tr>
-            <th>用户名</th>
-            <th>邮箱</th>
-            <th>姓名</th>
-            <th>城市</th>
-            <th>地址</th>
-            <th>操作</th>
+            <th>User</th>
+            <th>Email</th>
+            <th>FirstName</th>
+            <th>City</th>
+            <th>Address</th>
+            <th>isManager</th>
+            <th>Actions</th>
+
         </tr>
         </thead>
         <tbody>
@@ -33,9 +45,24 @@
             <td th:text="${account.firstName + ' ' + account.lastName}">ACME User</td>
             <td th:text="${account.city}">New York</td>
             <td th:text="${account.address1}">123 Street</td>
+
             <td>
-                <a th:href="@{/manage/editAccountForm(username=${account.username})}">修改资料</a>
+
+                <span th:if="${account.isManager}" style="color: green; font-weight: bold;">Yes</span>
+                <span th:unless="${account.isManager}" style="color: red; font-weight: bold;">No</span>
             </td>
+
+            <td>
+                <a class="action-btn" th:href="@{/manage/editAccountForm(username=${account.username})}">Edit</a>
+
+                <a class="action-btn"
+                   th:href="@{/manage/changeManagerStatus(username=${account.username}, isManager=${account.isManager != null ? account.isManager : false})}"
+                   th:text="${account.isManager != null and account.isManager ? 'User ' : 'Admin '}">
+                </a>
+                <a class="action-btn delete-btn" th:href="@{/manage/deleteAccount(username=${account.username})}">Delete</a>
+            </td>
+
+
         </tr>
         </tbody>
     </table>

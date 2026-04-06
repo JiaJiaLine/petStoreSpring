@@ -6,12 +6,16 @@ import org.example.petstorespring.service.AccountService;
 import org.example.petstorespring.service.ManageService;
 import org.example.petstorespring.service.OrderService;
 import org.example.petstorespring.vo.ItemVO;
+import org.example.petstorespring.vo.LoginAccountVO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -415,6 +419,68 @@ public class ManageController {
             model.addAttribute("accountList", allAccounts);
             return "manage/manageAccounts";
         }
+    }
+
+    @GetMapping("/editAccountForm")
+    public String getEditAccount(@RequestParam("username") String username, Model model){
+       Account account=accountService.getAccount(username);
+        List<String> languageList = Arrays.asList("zh-CN", "en-US", "ja-JP");
+        List<String> favList = Arrays.asList("BIRDS",
+                "CATS",
+                "DOGS",
+                "FISH",
+                "REPTILES"
+        );
+        model.addAttribute("favouriteCategoryId",favList);
+        model.addAttribute("languagePreference",languageList);
+       LoginAccountVO loginAccountVO=accountService.editAccount(account);
+        // 1. 防御性编程：如果语言偏好为空，给一个默认值，防止数据库报错
+        if (loginAccountVO.getLanguagePreference() == null || loginAccountVO.getLanguagePreference().isEmpty()) {
+            loginAccountVO.setLanguagePreference("english");
+        }
+
+        // 2. 同样检查 favouriteCategoryId
+        if (loginAccountVO.getFavouriteCategoryId() == null || loginAccountVO.getFavouriteCategoryId().isEmpty()) {
+            loginAccountVO.setFavouriteCategoryId("DOGS"); // 给个默认分类
+        }
+       model.addAttribute("loginAccount", loginAccountVO);
+       return "manage/editAccounts";
+    }
+
+    @PostMapping("/updateAccount")
+    public String postEditAccount( @RequestParam("username")String username, LoginAccountVO loginAccountVO){
+        Account account=new Account();
+         BeanUtils.copyProperties(loginAccountVO,account);
+         account.setUsername(username);
+        accountService.editAccount(account);
+        return "redirect:/manage/manageAccounts";
+
+    }
+
+    @GetMapping("/changeManagerStatus")
+    public String changeManagerStatus(String username,Boolean isManager,Model model) {
+
+        accountService.changeManagerStatus(username,isManager);
+        return "redirect:/manage/manageAccounts";
+    }
+
+    @GetMapping("/deleteAccount")
+    public String deleteAccount(@RequestParam("username") String username,Model model) {
+        accountService.deleteAccount(username);
+        return "redirect:/manage/manageAccounts";
+    }
+
+    @PostMapping("/searchUser")
+    public String searchUser(@RequestParam("keyword") String keyword, Model model) {
+        List<Account> accounts = accountService.getAllAccounts();
+        List<Account> filteredAccounts = new ArrayList<>();
+        for (Account account : accounts) {
+            if (account.getUsername().toLowerCase().contains(keyword.toLowerCase())) {
+                filteredAccounts.add(account);
+            }
+        }
+        model.addAttribute("accountList", filteredAccounts);
+        return "manage/manageAccounts";
     }
 }
 

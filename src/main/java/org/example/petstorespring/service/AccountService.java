@@ -17,4 +17,10 @@ public interface AccountService {
     void setAccount(Account newaccount);
     void generateCaptcha(String captcha, HttpSession session);
     List<Account> getAllAccounts();
+
+    LoginAccountVO editAccount(Account account);
+
+    void changeManagerStatus(String username, Boolean isManager);
+
+    void deleteAccount(String username);
 }

@@ -37,6 +37,10 @@
             <th:block th:if="${session.loginAccount != null and session.loginAccount.isManager()}">
                 <a href="/manage/manageCategory">Modify</a> <img style="vertical-align: middle;" th:src="@{/images/separator.gif}" />
             </th:block>
+
+            <th:block th:if="${session.loginAccount != null and session.loginAccount.isManager()}">
+                <a href="/manage/manageAccounts">User</a> <img style="vertical-align: middle;" th:src="@{/images/separator.gif}" />
+            </th:block>
             <a th:href="@{/help.html}">?</a>
         </div>
     </div>

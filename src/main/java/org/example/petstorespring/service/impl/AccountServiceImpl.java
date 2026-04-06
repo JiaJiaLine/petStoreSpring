@@ -38,17 +38,17 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public SignOnVO getSignOn(String username, String password) {
 
-        SignOn signOn=signOnMapper.selectById(username);
-        SignOnVO signOnVO=new SignOnVO();
-        if(username==null||password==null){
+        SignOn signOn = signOnMapper.selectById(username);
+        SignOnVO signOnVO = new SignOnVO();
+        if (username == null || password == null) {
             signOnVO.setSignOnMsg("请输入账号密码");
             return signOnVO;
         }
-        if(signOn==null){
+        if (signOn == null) {
             signOnVO.setSignOnMsg("用户不存在");
-         return signOnVO;
+            return signOnVO;
         }
-        if(!password.equals(signOn.getPassword())){
+        if (!password.equals(signOn.getPassword())) {
             signOnVO.setSignOnMsg("密码错误");
             return signOnVO;
         }
@@ -60,7 +60,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account getAccount(String username) {
-         account=accountMapper.selectById(username);
+        account = accountMapper.selectById(username);
         return account;
     }
 
@@ -71,9 +71,9 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void setAccount(Account newaccount){
-        account=newaccount;
-}
+    public void setAccount(Account newaccount) {
+        account = newaccount;
+    }
 
     //哈哈哈
     @Override
@@ -141,7 +141,7 @@ public class AccountServiceImpl implements AccountService {
         }
 
 
-         loginAccountVO.setPassword(null);
+        loginAccountVO.setPassword(null);
 
         return loginAccountVO;
     }
@@ -173,6 +173,7 @@ public class AccountServiceImpl implements AccountService {
             // 注册场景：新建Account对象
             account1 = new Account();
             account1.setStatus("active"); // 注册默认激活状态
+            account1.setIsManager(false);
         }
 
         BeanUtils.copyProperties(loginAccountVO, account1);
@@ -198,16 +199,16 @@ public class AccountServiceImpl implements AccountService {
         } else {
             profileMapper.updateById(profile);
         }
-        SignOn signOn=signOnMapper.selectById(username);
-        boolean isNewSignOn=(signOn==null);
-        if(isNewSignOn){
-            signOn=new SignOn();
+        SignOn signOn = signOnMapper.selectById(username);
+        boolean isNewSignOn = (signOn == null);
+        if (isNewSignOn) {
+            signOn = new SignOn();
         }
-      BeanUtils.copyProperties(loginAccountVO,signOn);
+        BeanUtils.copyProperties(loginAccountVO, signOn);
         signOn.setUsername(username);
-        if(isNewSignOn){
+        if (isNewSignOn) {
             signOnMapper.insert(signOn);
-        }else{
+        } else {
             signOnMapper.updateById(signOn);
 
         }
@@ -217,9 +218,61 @@ public class AccountServiceImpl implements AccountService {
             session.setAttribute("account", account1);
         }
     }
+
     @Override
     public List<Account> getAllAccounts() {
         // 传入 null 表示没有任何查询条件，即查询所有
         return accountMapper.selectList(null);
     }
+
+    @Override
+    public LoginAccountVO editAccount(Account account) {
+        LoginAccountVO loginAccountVO = new LoginAccountVO();
+        BeanUtils.copyProperties(account, loginAccountVO);
+        accountMapper.updateById( account);
+        Profile profile = profileMapper.selectById(account.getUsername());
+        Boolean isNewProfile = (profile == null);
+        if (isNewProfile) {
+            profile = new Profile();
+        }
+        profile.setUsername(account.getUsername());
+        BeanUtils.copyProperties(profile, loginAccountVO);
+        if (isNewProfile) {
+            profileMapper.insert(profile);
+        } else {
+            profileMapper.updateById(profile);
+        }
+
+
+        BannerData bannerData = bannerDataMapper.selectById(profile.getFavouriteCategoryId());
+         if (bannerData != null) {
+            loginAccountVO.setBannerName(bannerData.getBannerName());
+        } else {
+            loginAccountVO.setBannerName(null);
+        }
+
+        return loginAccountVO;
+    }
+
+    @Override
+    public void changeManagerStatus(String username, Boolean isManager) {
+        Account account=accountMapper.selectById(username);
+        if (account != null) {
+            // 简单的逻辑翻转
+            Boolean newStatus = (isManager != null &&isManager) ? false : true;
+
+            account.setIsManager(newStatus);
+            accountMapper.updateById(account);
+        }
+
+
+
+    }
+
+    @Override
+    public void deleteAccount(String username) {
+        profileMapper.deleteById(username);
+        accountMapper.deleteById(username);
+    }
+
 }
